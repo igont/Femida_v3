@@ -24,6 +24,16 @@ public class User
 
 		return fromName;
 	}
+	public static Long getChatID()  // Получаем ID пользователя разными способами
+	{
+		Update update = Main.updateHandler.activeUser.getLastUpdate();
+		Long chatId = -1L;
+
+		if(update.hasMessage()) chatId = update.getMessage().getChatId();
+		else if(update.hasCallbackQuery()) chatId = update.getCallbackQuery().getMessage().getChatId();
+
+		return chatId;
+	}
 	public Update getLastUpdate()
 	{
 		return lastUpdate;
