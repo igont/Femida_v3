@@ -4,17 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b82d5403-4fb8-4cc0-8f79-34c0ecf81b20" name="Changes" comment="feat: Dialogues (unfinished)">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/IDialogue.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/IValidator.java" afterDir="false" />
+    <list default="true" id="b82d5403-4fb8-4cc0-8f79-34c0ecf81b20" name="Changes" comment="feat: Dialogues (interfaces)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/BotStarter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/BotStarter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/Action.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/IAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/Dialogue.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/Validation.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/UpdateHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/UpdateHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/IDialogue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/IDialogue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/MainDialogue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/MainDialogue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/MainStage.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/Stage1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/StageNewReferee.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/StartStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/StartStage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/Validateable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/Validateable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -174,7 +171,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675238813674</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="feat: Dialogues (interfaces)">
+      <created>1676391311211</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1676391311211</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -199,6 +203,7 @@
     <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="Start" />
     <MESSAGE value="feat: Dialogues (unfinished)" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Dialogues (unfinished)" />
+    <MESSAGE value="feat: Dialogues (interfaces)" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Dialogues (interfaces)" />
   </component>
 </project>

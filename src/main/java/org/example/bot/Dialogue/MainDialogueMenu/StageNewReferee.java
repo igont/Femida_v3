@@ -6,9 +6,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
 
-public class Stage1 extends IStage
+public class StageNewReferee extends IStage
 {
-	public Stage1(List<IStage> list)
+	public StageNewReferee(List<IStage> list)
 	{
 		init(list.size());
 	}
@@ -16,15 +16,13 @@ public class Stage1 extends IStage
 	@Override
 	public void action()
 	{
-		TGSender.send("[[1 стадия меню]]");
-		TGSender.send("Для выхода, нажмите: 0");
+
 	}
 
 	@Override
 	public int preValidation(Update update)
 	{
-		if(update.getMessage().getText().equals("0")) return 0;
-		return 1;
+		return stageNum;
 	}
 
 	@Override

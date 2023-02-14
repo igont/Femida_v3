@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class User
 {
 	public final String name;
+	public String phoneNumber;
 	private int lastMessageId;
 	public Update lastUpdate;
 

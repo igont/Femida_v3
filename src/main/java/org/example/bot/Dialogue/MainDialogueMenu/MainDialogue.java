@@ -12,8 +12,7 @@ public class MainDialogue extends IDialogue
 	{
 		stages = new ArrayList<>();
 		stages.add(new StartStage(stages));
-		stages.add(new MainStage(stages));
-		stages.add(new Stage1(stages));
+		stages.add(new StageNewReferee(stages));
 
 		changeStage(0);
 	}

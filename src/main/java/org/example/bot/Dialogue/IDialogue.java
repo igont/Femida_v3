@@ -28,23 +28,31 @@ public abstract class IDialogue
 
 	public void receiveUpdate(Update update)
 	{
+		if(!checkStage(update, currentStage))
+		{
+			if(currentStage.stageNum != 0) checkStage(update, stages.get(0)); // Нулевая стадия содержит глобальные команды
+		}
+	}
+
+	private boolean checkStage(Update update, IStage checkedStage)
+	{
 		Answer answer = updateToAnswer(update);
+		answer.nextStage = checkedStage.preValidation(update);
 
-		answer.nextStage = currentStage.preValidation(update);
-		System.out.println(answer);
+		if(checkedStage.getStageNum() == answer.nextStage) return false;
 
-		if(currentStage.getStageNum() == answer.nextStage) return;
-
-
-		if(currentStage.validators.get(answer.nextStage).validate(answer.validateable))
+		if(checkedStage.validators.get(answer.nextStage).validate(answer.validateable))
 		{
 			changeStage(answer.nextStage);
+			return true;
 		}
+		return false;
 	}
 
 	private Answer updateToAnswer(Update update)
 	{
 		Answer answer = new Answer();
+		answer.validateable.update = update;
 
 		if(update.hasMessage())
 		{
