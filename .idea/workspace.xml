@@ -4,8 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b82d5403-4fb8-4cc0-8f79-34c0ecf81b20" name="Changes" comment="feat: Dialogues (stage changing) (getting user's phone number)">
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/StageNewCompetition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/StageNewCompetition.java" afterDir="false" />
+    <list default="true" id="b82d5403-4fb8-4cc0-8f79-34c0ecf81b20" name="Changes" comment="feat: Dialogues (interfaces)">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/IDialogue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/IDialogue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/MainDialogue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/MainDialogue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/MainStage.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/Stage1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/StageNewReferee.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/StartStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/StartStage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/Validateable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/Validateable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,18 +65,18 @@
     <option name="showLibraryContents" value="true" />
     <option name="sortByType" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;last.edited.regexp&quot;: &quot;table.xlsx&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.editor&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "last.edited.regexp": "table.xlsx",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "configurable.group.editor"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="main.java.org.example.bot.Dialogue.MainDialogueMenu" />
@@ -171,14 +178,7 @@
       <option name="project" value="LOCAL" />
       <updated>1676391311211</updated>
     </task>
-    <task id="LOCAL-00011" summary="feat: Dialogues (stage changing) (getting user's phone number)">
-      <created>1676396651927</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1676396651927</updated>
-    </task>
-    <option name="localTasksCounter" value="12" />
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -204,7 +204,6 @@
     <MESSAGE value="Start" />
     <MESSAGE value="feat: Dialogues (unfinished)" />
     <MESSAGE value="feat: Dialogues (interfaces)" />
-    <MESSAGE value="feat: Dialogues (stage changing) (getting user's phone number)" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Dialogues (stage changing) (getting user's phone number)" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Dialogues (interfaces)" />
   </component>
 </project>

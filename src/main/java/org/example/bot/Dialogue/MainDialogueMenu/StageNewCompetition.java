@@ -1,16 +1,18 @@
 package main.java.org.example.bot.Dialogue.MainDialogueMenu;
 
 import main.java.org.example.bot.Dialogue.IStage;
+import main.java.org.example.bot.TG.TGSender;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
 
-public class StageNewCompetition extends IStage
+public class StageNewReferee extends IStage
 {
-	public StageNewCompetition(List<IStage> list)
+	public StageNewReferee(List<IStage> list)
 	{
 		init(list.size());
 	}
+
 	@Override
 	public void action()
 	{
@@ -20,12 +22,12 @@ public class StageNewCompetition extends IStage
 	@Override
 	public int preValidation(Update update)
 	{
-		return 0;
+		return stageNum;
 	}
 
 	@Override
 	public void addValidators()
 	{
-
+		validators.put(0, (Validateable) -> true);
 	}
 }
