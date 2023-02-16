@@ -41,30 +41,7 @@ public class GlobalStage extends IStage // Стадия приветствия
 				⬇️Войти в систему
 				/Register""";
 
-		SendMessage sendMessage = new SendMessage();
-		sendMessage.setChatId(User.getChatID());
-		sendMessage.setText(text);
-
-		ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-		//sendMessage.setReplyMarkup(replyKeyboardMarkup);
-		replyKeyboardMarkup.setSelective(true);
-		replyKeyboardMarkup.setResizeKeyboard(true);
-		replyKeyboardMarkup.setOneTimeKeyboard(true);
-		replyKeyboardMarkup.setSelective(true);
-
-		List<KeyboardRow> keyboard = new ArrayList<>();
-
-		KeyboardRow keyboardFirstRow = new KeyboardRow();
-		KeyboardButton keyboardButton = new KeyboardButton();
-
-		keyboardButton.setText("Share your number >");
-		keyboardButton.setRequestContact(true);
-		keyboardFirstRow.add(keyboardButton);
-
-		keyboard.add(keyboardFirstRow);
-		replyKeyboardMarkup.setKeyboard(keyboard);
-
-		TGSender.send(sendMessage);
+		TGSender.send(text);
 	}
 
 	@Override

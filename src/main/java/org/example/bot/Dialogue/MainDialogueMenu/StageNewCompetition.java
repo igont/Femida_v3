@@ -1,14 +1,13 @@
 package main.java.org.example.bot.Dialogue.MainDialogueMenu;
 
 import main.java.org.example.bot.Dialogue.IStage;
-import main.java.org.example.bot.TG.TGSender;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
 
-public class StageNewReferee extends IStage
+public class StageNewCompetition extends IStage
 {
-	public StageNewReferee(List<IStage> list)
+	public StageNewCompetition(List<IStage> list)
 	{
 		init(list.size());
 	}
