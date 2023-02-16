@@ -11,8 +11,8 @@ public class MainDialogue extends IDialogue
 	public void start()
 	{
 		stages = new ArrayList<>();
-		stages.add(new StartStage(stages));
-		stages.add(new StageNewReferee(stages));
+		stages.add(new GlobalStage(stages));
+		stages.add(new StageNewCompetition(stages));
 
 		changeStage(0);
 	}
