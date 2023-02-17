@@ -2,6 +2,7 @@ package main.java.org.example.bot.Dialogue.MainDialogueMenu;
 
 import main.java.org.example.bot.Dialogue.IStage;
 import main.java.org.example.bot.Dialogue.Validateable;
+import main.java.org.example.bot.Excel.ExcelParser;
 import main.java.org.example.bot.Files.MyFiles;
 import main.java.org.example.bot.Files.ResourcesFiles;
 import main.java.org.example.bot.TG.TGSender;
@@ -43,7 +44,7 @@ public class NewCompetitionStage extends IStage
 	{
 		validators.put(6, (Validateable validateable) ->
 		{
-			TGSender.send("Данные проверяются...");
+			ExcelParser parser = new ExcelParser();
 			return false;
 			// тут будет осуществляться проверка правильности заполненных данных
 		});

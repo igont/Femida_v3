@@ -31,6 +31,7 @@ public abstract class IDialogue
 	public void receiveUpdate(Update update)
 	{
 		System.out.println("Получен запрос от: " + SafeUpdateParser.getName());
+
 		if(!checkStage(update, currentStage))
 		{
 			if(currentStage.stageNum != 0) checkStage(update, stages.get(0)); // Нулевая стадия содержит глобальные команды
@@ -64,7 +65,7 @@ public abstract class IDialogue
 			{
 				String fileName = update.getMessage().getDocument().getFileName();
 
-				String[] split = fileName.split("\\.");
+				String[] split = fileName.split("\\."); // TODO Переделать на поиск окончания .xlsx
 				if(split.length == 2 & split[1] == "xlsx")
 				{
 					GetFile getFile = new GetFile(update.getMessage().getDocument().getFileId());
