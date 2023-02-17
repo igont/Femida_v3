@@ -15,26 +15,6 @@ public class User
 		this.name = name;
 	}
 
-	public static String getName() // Получаем Имя пользователя разными способами
-	{
-		String fromName = "";
-		Update update = Main.updateHandler.activeUser.getLastUpdate();
-
-		if(update.hasMessage()) fromName = update.getMessage().getFrom().getUserName();
-		else if(update.hasCallbackQuery()) fromName = update.getCallbackQuery().getFrom().getUserName();
-
-		return fromName;
-	}
-	public static Long getChatID()  // Получаем ID пользователя разными способами
-	{
-		Update update = Main.updateHandler.activeUser.getLastUpdate();
-		Long chatId = -1L;
-
-		if(update.hasMessage()) chatId = update.getMessage().getChatId();
-		else if(update.hasCallbackQuery()) chatId = update.getCallbackQuery().getMessage().getChatId();
-
-		return chatId;
-	}
 	public Update getLastUpdate()
 	{
 		return lastUpdate;

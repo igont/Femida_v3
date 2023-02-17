@@ -1,5 +1,6 @@
 package main.java.org.example.bot.Dialogue;
 
+import main.java.org.example.bot.SafeUpdateParser;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -8,6 +9,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import static main.java.org.example.Main.myBot;
+import static main.java.org.example.Main.safeUpdateParser;
 
 public abstract class IDialogue
 {
@@ -28,6 +30,7 @@ public abstract class IDialogue
 
 	public void receiveUpdate(Update update)
 	{
+		System.out.println("Получен запрос от: " + SafeUpdateParser.getName());
 		if(!checkStage(update, currentStage))
 		{
 			if(currentStage.stageNum != 0) checkStage(update, stages.get(0)); // Нулевая стадия содержит глобальные команды
@@ -61,7 +64,7 @@ public abstract class IDialogue
 			{
 				String fileName = update.getMessage().getDocument().getFileName();
 
-				String[] split = fileName.split(".");
+				String[] split = fileName.split("\\.");
 				if(split.length == 2 & split[1] == "xlsx")
 				{
 					GetFile getFile = new GetFile(update.getMessage().getDocument().getFileId());

@@ -12,7 +12,13 @@ public class MainDialogue extends IDialogue
 	{
 		stages = new ArrayList<>();
 		stages.add(new GlobalStage(stages));
-		stages.add(new StageNewCompetition(stages));
+		stages.add(new NewRefereeStage(stages));
+		stages.add(null);
+		stages.add(new NewCompetitionStage(stages));
+		stages.add(null);
+		stages.add(null);
+		stages.add(null);
+
 
 		changeStage(0);
 	}

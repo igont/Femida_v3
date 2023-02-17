@@ -3,6 +3,7 @@ package main.java.org.example.bot.Dialogue.MainDialogueMenu;
 import main.java.org.example.Main;
 import main.java.org.example.bot.Dialogue.IStage;
 import main.java.org.example.bot.Dialogue.Validateable;
+import main.java.org.example.bot.SafeUpdateParser;
 import main.java.org.example.bot.TG.TGSender;
 import main.java.org.example.bot.User;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -29,16 +30,16 @@ public class GlobalStage extends IStage // Стадия приветствия
 
 				С помощью бота вы сможете выполнять следующие действия:
 
-				➕Зарегистрировать нового судью:
+				➕*Зарегистрировать нового судью:*
 				/NewReferee
 
-				➕Создать новое соревнование:
+				➕*Создать новое соревнование:*
 				/NewCompetition
 
-				📃Вывести рейтинг всех судей:
+				📃*Вывести рейтинг всех судей:*
 				/GlobalRating
 								
-				⬇️Войти в систему
+				⬇️*Войти в систему:*
 				/Register""";
 
 		TGSender.send(text);
@@ -69,25 +70,24 @@ public class GlobalStage extends IStage // Стадия приветствия
 	@Override
 	public void addValidators()
 	{
-		validators.put(1, (Validateable validateable) ->
-		{
-			TGSender.send("Еще не доступно...");
-			return false;
-		});
+		//NewReferee
+		validators.put(1, (Validateable validateable) -> true);
+
+		// GlobalRating
 		validators.put(2, (Validateable) ->
 		{
 			TGSender.send("Еще не доступно...");
 			return false;
 		});
-		validators.put(3, (Validateable) ->
-		{
-			TGSender.send("Еще не доступно...");
-			return false;
-		});
+
+		//NewCompetition
+		validators.put(3, (Validateable) -> true);
+
+		//Register
 		validators.put(4, (Validateable) ->
 		{
 			SendMessage sendMessage = new SendMessage();
-			sendMessage.setChatId(User.getChatID());
+			sendMessage.setChatId(SafeUpdateParser.getChatID());
 			sendMessage.setText("Разрешите доступ к номеру телефона для автоматической регистрации");
 
 			ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
@@ -110,6 +110,8 @@ public class GlobalStage extends IStage // Стадия приветствия
 			TGSender.send(sendMessage);
 			return false;
 		});
+
+		//Phone validation
 		validators.put(5, (Validateable) ->
 		{
 			TGSender.send("Выполняем поиск по номеру: " + Main.updateHandler.activeUser.phoneNumber);

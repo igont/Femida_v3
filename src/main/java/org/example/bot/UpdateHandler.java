@@ -50,7 +50,7 @@ public class UpdateHandler
 			activeUser = newUser;
 			users.add(newUser);
 			activeUser.lastUpdate = update;
-			return "Получен запрос от нового пользователя: " + User.getName();
+			return "Получен запрос от нового пользователя: " + SafeUpdateParser.getName();
 		}
 	}
 }

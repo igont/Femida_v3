@@ -1,5 +1,6 @@
 package main.java.org.example.bot.TG;
 
+import main.java.org.example.bot.SafeUpdateParser;
 import main.java.org.example.bot.User;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
@@ -55,7 +56,7 @@ public class TGSender
 		SendMessage message = new SendMessage();
 		if(!text.isEmpty()) message.setText(text);
 		if(!(inlineKeyboardMarkup == null)) message.setReplyMarkup(inlineKeyboardMarkup);
-		message.setChatId(User.getChatID());
+		message.setChatId(SafeUpdateParser.getChatID());
 		message.setParseMode(ParseMode.MARKDOWN);
 
 		Message result;
@@ -67,7 +68,7 @@ public class TGSender
 	private Message sendFileMessage()
 	{
 		SendDocument sendDocument = new SendDocument();
-		sendDocument.setChatId(User.getChatID());
+		sendDocument.setChatId(SafeUpdateParser.getChatID());
 		sendDocument.setDocument(new InputFile(sendFile));
 
 		return send(sendDocument);
@@ -76,7 +77,7 @@ public class TGSender
 	private Message sendImageMessage()
 	{
 		SendPhoto sendPhoto = new SendPhoto();
-		sendPhoto.setChatId(User.getChatID());
+		sendPhoto.setChatId(SafeUpdateParser.getChatID());
 		sendPhoto.setPhoto(new InputFile(sendImage));
 		sendPhoto.setCaption(text);
 
@@ -116,7 +117,7 @@ public class TGSender
 	public static Message send(String s) // Отправляет текст в чат
 	{
 		SendMessage message = new SendMessage();
-		message.setChatId(User.getChatID());
+		message.setChatId(SafeUpdateParser.getChatID());
 		message.setParseMode(ParseMode.MARKDOWN);
 		message.setText(s);
 

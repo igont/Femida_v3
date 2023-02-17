@@ -4,13 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b82d5403-4fb8-4cc0-8f79-34c0ecf81b20" name="Changes" comment="feat: Dialogues (interfaces)">
+    <list default="true" id="b82d5403-4fb8-4cc0-8f79-34c0ecf81b20" name="Changes" comment="feat: Dialogues (complete getting number) (fixed merge Fail)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/IDialogue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/IDialogue.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/GlobalStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/GlobalStage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/MainDialogue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/MainDialogue.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/StageNewCompetition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/StageNewCompetition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/Validateable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/Validateable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/StageNewCompetition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/NewCompetitionStage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/TG/Checkpoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/TG/Checkpoint.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/TG/TGSender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/TG/TGSender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/UpdateHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/UpdateHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -22,6 +25,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -34,7 +38,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="5e9bf9734ba6bc27d8e97935474e611af547492b" />
+        <entry key="$PROJECT_DIR$" value="72279bebf3311aebd9365e3a0a7fa42876cc3d0b" />
       </map>
     </option>
   </component>
@@ -77,6 +81,9 @@
   }
 }</component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\igor\Programming\Femida\Femida_v0.3" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="main.java.org.example.bot.Dialogue.MainDialogueMenu" />
       <recent name="main.java.org.example.bot.Dialogue" />
@@ -177,7 +184,14 @@
       <option name="project" value="LOCAL" />
       <updated>1676391311211</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="feat: Dialogues (complete getting number) (fixed merge Fail)">
+      <created>1676537352535</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1676537352535</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -203,6 +217,8 @@
     <MESSAGE value="Start" />
     <MESSAGE value="feat: Dialogues (unfinished)" />
     <MESSAGE value="feat: Dialogues (interfaces)" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Dialogues (interfaces)" />
+    <MESSAGE value="feat: Dialogues (complete getting number)" />
+    <MESSAGE value="feat: Dialogues (complete getting number) (fixed merge Fail)" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Dialogues (complete getting number) (fixed merge Fail)" />
   </component>
 </project>
