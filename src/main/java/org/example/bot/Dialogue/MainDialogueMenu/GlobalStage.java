@@ -1,19 +1,18 @@
 package main.java.org.example.bot.Dialogue.MainDialogueMenu;
 
 import main.java.org.example.Main;
+import main.java.org.example.bot.Dialogue.Answer;
 import main.java.org.example.bot.Dialogue.IStage;
-import main.java.org.example.bot.Dialogue.Validateable;
 import main.java.org.example.bot.SafeUpdateParser;
 import main.java.org.example.bot.TG.TGSender;
-import main.java.org.example.bot.User;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class GlobalStage extends IStage // Стадия приветствия
 {
@@ -46,24 +45,19 @@ public class GlobalStage extends IStage // Стадия приветствия
 	}
 
 	@Override
-	public int preValidation(Update update)
+	public int preValidation(Answer answer)
 	{
-		if(update.hasMessage())
+		if(Objects.equals(answer.getMessage(), "/NewReferee")) return 1;
+		if(Objects.equals(answer.getMessage(), "/GlobalRating")) return 2;
+		if(Objects.equals(answer.getMessage(), "/NewCompetition")) return 3;
+		if(Objects.equals(answer.getMessage(), "/Register")) return 4;
+
+		if(answer.hasPhone())
 		{
-			if(update.getMessage().hasText())
-			{
-				if(update.getMessage().getText().equals("/NewReferee")) return 1;
-				if(update.getMessage().getText().equals("/GlobalRating")) return 2;
-				if(update.getMessage().getText().equals("/NewCompetition")) return 3;
-				if(update.getMessage().getText().equals("/Register")) return 4;
-			}
-			if(update.getMessage().hasContact())
-			{
-				Main.updateHandler.activeUser.phoneNumber = update.getMessage().getContact().getPhoneNumber();
-				System.out.println(Main.updateHandler.activeUser.phoneNumber);
-				return 5;
-			}
+			Main.updateHandler.activeUser.phoneNumber = answer.getPhone();
+			return 5;
 		}
+
 		return stageNum;
 	}
 
@@ -71,20 +65,20 @@ public class GlobalStage extends IStage // Стадия приветствия
 	public void addValidators()
 	{
 		//NewReferee
-		validators.put(1, (Validateable validateable) -> true);
+		validators.put(1, (Answer answer) -> true);
 
 		// GlobalRating
-		validators.put(2, (Validateable) ->
+		validators.put(2, (Answer) ->
 		{
 			TGSender.send("Еще не доступно...");
 			return false;
 		});
 
 		//NewCompetition
-		validators.put(3, (Validateable) -> true);
+		validators.put(3, (Answer) -> true);
 
 		//Register
-		validators.put(4, (Validateable) ->
+		validators.put(4, (Answer) ->
 		{
 			SendMessage sendMessage = new SendMessage();
 			sendMessage.setChatId(SafeUpdateParser.getChatID());
@@ -112,7 +106,7 @@ public class GlobalStage extends IStage // Стадия приветствия
 		});
 
 		//Phone validation
-		validators.put(5, (Validateable) ->
+		validators.put(5, (Answer) ->
 		{
 			TGSender.send("Выполняем поиск по номеру: " + Main.updateHandler.activeUser.phoneNumber);
 			return false;

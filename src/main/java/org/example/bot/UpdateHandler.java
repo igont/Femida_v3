@@ -21,7 +21,7 @@ public class UpdateHandler
 	{
 		users = new ArrayList<>();
 	}
-	public String authoriseUser(Update update) // Поиск пользователя в общей базе
+	public void authoriseUser(Update update) // Поиск пользователя в общей базе
 	{
 		String fromName = "";
 		if(update.hasMessage()) fromName = update.getMessage().getFrom().getUserName();
@@ -39,18 +39,11 @@ public class UpdateHandler
 			}
 		}
 
-		if(isFind)
-		{
-			activeUser.lastUpdate = update;
-			//return "Получен запрос он известного пользователя: " + User.getName();
-			return null;
-		}
-		else
+		if(!isFind)
 		{
 			activeUser = newUser;
 			users.add(newUser);
-			activeUser.lastUpdate = update;
-			return "Получен запрос от нового пользователя: " + SafeUpdateParser.getName();
 		}
+		activeUser.lastUpdate = update;
 	}
 }

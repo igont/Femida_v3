@@ -9,7 +9,7 @@ public abstract class IStage
 {
 	protected int stageNum;
 	public abstract void action();
-	public abstract int preValidation(Update update);
+	public abstract int preValidation(Answer answer);
 
 	public Map<Integer, IValidator> validators = new HashMap<>();
 	public abstract void addValidators();

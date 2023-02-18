@@ -1,12 +1,11 @@
 package main.java.org.example.bot.Dialogue.MainDialogueMenu;
 
+import main.java.org.example.bot.Dialogue.Answer;
 import main.java.org.example.bot.Dialogue.IStage;
-import main.java.org.example.bot.Dialogue.Validateable;
 import main.java.org.example.bot.Excel.ExcelParser;
 import main.java.org.example.bot.Files.MyFiles;
 import main.java.org.example.bot.Files.ResourcesFiles;
 import main.java.org.example.bot.TG.TGSender;
-import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.io.File;
 import java.util.List;
@@ -30,19 +29,16 @@ public class NewCompetitionStage extends IStage
 	}
 
 	@Override
-	public int preValidation(Update update)
+	public int preValidation(Answer answer)
 	{
-		if(update.hasMessage())
-		{
-			if(update.getMessage().hasDocument()) return 6;
-		}
+		if(answer.hasDocument()) return 6;
 		return stageNum;
 	}
 
 	@Override
 	public void addValidators()
 	{
-		validators.put(6, (Validateable validateable) ->
+		validators.put(6, (Answer answer) ->
 		{
 			ExcelParser parser = new ExcelParser();
 			return false;

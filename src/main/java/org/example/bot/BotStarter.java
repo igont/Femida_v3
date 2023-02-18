@@ -1,6 +1,5 @@
 package main.java.org.example.bot;
 
-import main.java.org.example.Main;
 import main.java.org.example.bot.TG.Checkpoint;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;

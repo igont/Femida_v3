@@ -4,11 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b82d5403-4fb8-4cc0-8f79-34c0ecf81b20" name="Changes" comment="feat: Dialogues (send and receive file)">
+    <list default="true" id="b82d5403-4fb8-4cc0-8f79-34c0ecf81b20" name="Changes" comment="feat-prepare: (Competition and Referee templates), (Excel parser)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/Template_Referee.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Resources/Template_Referee.xlsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/BotStarter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/BotStarter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/Answer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/Answer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/IDialogue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/IDialogue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/IStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/IStage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/IValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/IValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/GlobalStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/GlobalStage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/NewCompetitionStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/NewCompetitionStage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/NewRefereeStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/MainDialogueMenu/NewRefereeStage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/Dialogue/Validateable.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/TG/Checkpoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/TG/Checkpoint.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/TG/TGSender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/TG/TGSender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/UpdateHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/UpdateHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/bot/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/bot/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

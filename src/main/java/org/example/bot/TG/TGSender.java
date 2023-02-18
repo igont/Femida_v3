@@ -1,7 +1,6 @@
 package main.java.org.example.bot.TG;
 
 import main.java.org.example.bot.SafeUpdateParser;
-import main.java.org.example.bot.User;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
