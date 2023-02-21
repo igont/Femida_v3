@@ -1,12 +1,13 @@
 package main.java.org.example.bot.Dialogue;
 
 import main.java.org.example.Main;
+import main.java.org.example.bot.Files.MyFiles;
 import main.java.org.example.bot.SafeUpdateParser;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.InputStream;
+import java.io.File;
 import java.util.Objects;
 
 import static main.java.org.example.Main.myBot;
@@ -17,8 +18,8 @@ public class Answer
 	private String message;
 	private String phone = "";
 	private int currentStage;
+	private String fileName;
 	private int nextStage = -1;
-	private InputStream DocumentInputStream = null;
 	private Update update;
 
 	public Answer(Update update)
@@ -35,15 +36,16 @@ public class Answer
 				String fileName = update.getMessage().getDocument().getFileName();
 
 				String[] split = fileName.split("\\."); // TODO Переделать на поиск окончания .xlsx
-				if(split.length == 2 & split[1] == "xlsx")
+				System.out.println(fileName);
+				if(split.length == 2 & Objects.equals(split[1], "xlsx"))
 				{
 					GetFile getFile = new GetFile(update.getMessage().getDocument().getFileId());
 					String filePath;
 					try
 					{
 						filePath = myBot.execute(getFile).getFilePath();
-						//myBot.downloadFile(filePath,new File("C:\\Users\\masha\\Desktop\\" + fileName)); //   сохранение файла в память
-						DocumentInputStream = myBot.downloadFileAsStream(filePath);
+						myBot.downloadFile(filePath, new File(MyFiles.getTempPath() + fileName)); //   сохранение файла в память
+						this.fileName = fileName;
 					}
 					catch(TelegramApiException e)
 					{
@@ -84,10 +86,6 @@ public class Answer
 		return message;
 	}
 
-	public InputStream getDocumentInputStream()
-	{
-		return DocumentInputStream;
-	}
 
 	public Update getUpdate()
 	{
@@ -98,14 +96,20 @@ public class Answer
 	{
 		return !Objects.equals(phone, "");
 	}
-	public boolean hasDocument()
-	{
-		return DocumentInputStream != null;
-	}
 
 	@Override
 	public String toString()
 	{
-		return "Answer{" + "from='" + from + '\'' + ", message='" + message + '\'' + ", phone='" + phone + '\'' + ", currentStage=" + currentStage + ", nextStage=" + nextStage + ", DocumentInputStream=" + DocumentInputStream + ", update=" + "" + '}';
+		return "Answer{" + "from='" + from + '\'' + ", message='" + message + '\'' + ", phone='" + phone + '\'' + ", currentStage=" + currentStage + ", fileName='" + fileName + '\'' + ", nextStage=" + nextStage + '}';
+	}
+
+	public boolean hasDocument()
+	{
+		return !Objects.equals(fileName, "");
+	}
+
+	public String getFileName()
+	{
+		return fileName;
 	}
 }

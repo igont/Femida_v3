@@ -1,6 +1,7 @@
 target/
 out/
 Resources/META-INF
+Resources/Temp
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

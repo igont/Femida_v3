@@ -6,8 +6,10 @@ import main.java.org.example.bot.Excel.ExcelParser;
 import main.java.org.example.bot.Files.MyFiles;
 import main.java.org.example.bot.Files.ResourcesFiles;
 import main.java.org.example.bot.TG.TGSender;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class NewCompetitionStage extends IStage
@@ -40,9 +42,19 @@ public class NewCompetitionStage extends IStage
 	{
 		validators.put(6, (Answer answer) ->
 		{
-			ExcelParser parser = new ExcelParser();
-			return false;
-			// тут будет осуществляться проверка правильности заполненных данных
+			ExcelParser parser;
+			try
+			{
+				File excelBookFile = MyFiles.getFile(MyFiles.TEMP_ROOT + answer.getFileName());
+				parser = new ExcelParser(excelBookFile);
+				System.out.println("Книга открылась, считываю данные...");
+			}
+			catch(IOException | InvalidFormatException e)
+			{
+				TGSender.send("Это не похоже на книгу Excel, Вам нужно прислать тот же файл, который вы скачали из бота и внесли в него данные");
+				return false;
+			}
+			return true;
 		});
 	}
 }
