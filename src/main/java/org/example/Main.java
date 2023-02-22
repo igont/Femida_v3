@@ -13,7 +13,7 @@ public class Main
 {
 	public static final BotStarter myBot = new BotStarter();
 	public static final UpdateHandler updateHandler = new UpdateHandler();
-	public static IDialogue dialogue = new MainDialogue();
+
 	public static SafeUpdateParser safeUpdateParser = new SafeUpdateParser();
 
 	public static void main(String[] args)

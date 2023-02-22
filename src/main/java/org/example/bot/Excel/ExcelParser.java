@@ -1,6 +1,7 @@
 package main.java.org.example.bot.Excel;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -12,13 +13,14 @@ import java.io.InputStream;
 
 public class ExcelParser
 {
-	private final XSSFWorkbook book;
+	public final XSSFWorkbook book;
 
 	private XSSFSheet sheet;
 
 	public ExcelParser(File file) throws IOException, InvalidFormatException
 	{
 		book = new XSSFWorkbook(file);
+		setSheet(0);
 	}
 
 	public ExcelParser setSheet(int sheetNum)
@@ -27,11 +29,17 @@ public class ExcelParser
 		return this;
 	}
 
-	public String readCell(int row, int column)
+	public Cell readCell(int row, int column)
 	{
-		XSSFCell cell = sheet.getRow(row).getCell(column);
-		CellType cellType = cell.getCellType();
-		return readDifferentCellTypes(cell, cellType);
+		try
+		{
+			return sheet.getRow(row).getCell(column);
+
+		}
+		catch(NullPointerException e)
+		{
+			return null;
+		}
 	}
 
 	private String readDifferentCellTypes(XSSFCell cell, CellType cellType)

@@ -9,7 +9,6 @@ public enum RefereePosition
 	CHIEF_SECRETARY("Главный секретарь"),
 	SECRETARY("Секретарь"),
 	NONE("Неизвестно");
-
 	private final String positionTitle;
 
 	RefereePosition(String title)
@@ -17,8 +16,17 @@ public enum RefereePosition
 		positionTitle = title;
 	}
 
-	public String getPositionTitle()
+	public static RefereePosition convertPositionTitle(String title)
 	{
-		return positionTitle;
+		return switch(title)
+		{
+			case "Главный судья соревнований" -> CHIEF_COMPETITION_REFEREE;
+			case "Рефери" -> REFEREE;
+			case "Боковой судья" -> SIDE_REFEREE;
+			case "Руководитель ковра" -> CARPET_MANAGER;
+			case "Главный секретарь" -> CHIEF_SECRETARY;
+			case "Секретарь" -> SECRETARY;
+			default -> NONE;
+		};
 	}
 }

@@ -11,8 +11,8 @@ public class Checkpoint
 
 		Main.updateHandler.authoriseUser(update); // Регистрация пользователя
 
-		if(Main.dialogue.stages == null) Main.dialogue.start();
+		if(Main.updateHandler.activeUser.dialogue.stages == null) Main.updateHandler.activeUser.dialogue.start();
 
-		Main.dialogue.receiveUpdate(update);
+		Main.updateHandler.activeUser.dialogue.receiveUpdate(update);
 	}
 }

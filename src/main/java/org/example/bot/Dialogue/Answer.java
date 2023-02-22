@@ -3,6 +3,7 @@ package main.java.org.example.bot.Dialogue;
 import main.java.org.example.Main;
 import main.java.org.example.bot.Files.MyFiles;
 import main.java.org.example.bot.SafeUpdateParser;
+import main.java.org.example.bot.TG.TGSender;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -18,19 +19,21 @@ public class Answer
 	private String message;
 	private String phone = "";
 	private int currentStage;
-	private String fileName;
+	private String fileName = "";
 	private int nextStage = -1;
 	private Update update;
+	private Long chatID;
 
 	public Answer(Update update)
 	{
-		currentStage = Main.dialogue.getCurrentStage();
+		currentStage = Main.updateHandler.activeUser.dialogue.getCurrentStage();
 		this.update = update;
 		from = SafeUpdateParser.getName();
+		chatID = SafeUpdateParser.getChatID();
 
 		if(update.hasMessage())
 		{
-			message = update.getMessage().getText(); // Просто текст
+			message = update.getMessage().getText();//.replace("@ARC_Femida_bot",""); // Просто текст
 			if(update.getMessage().hasDocument())
 			{
 				String fileName = update.getMessage().getDocument().getFileName();
@@ -51,6 +54,10 @@ public class Answer
 					{
 						throw new RuntimeException(e);
 					}
+				}
+				else
+				{
+					TGSender.send("Принимаются только файлы xlsx. Вам нужно прислать тот же файл, который вы скачали из бота и внесли в него данные");
 				}
 			}
 			if(update.getMessage().hasContact())
@@ -100,7 +107,7 @@ public class Answer
 	@Override
 	public String toString()
 	{
-		return "Answer{" + "from='" + from + '\'' + ", message='" + message + '\'' + ", phone='" + phone + '\'' + ", currentStage=" + currentStage + ", fileName='" + fileName + '\'' + ", nextStage=" + nextStage + '}';
+		return "Answer{" + "from='" + from + '\'' + ", message='" + message + '\'' + ", phone='" + phone + '\'' + ", currentStage=" + currentStage + ", fileName='" + fileName + '\'' + ", nextStage=" + nextStage + ", chatID=" + chatID + '}';
 	}
 
 	public boolean hasDocument()
