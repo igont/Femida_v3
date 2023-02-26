@@ -2,12 +2,16 @@ package main.java.org.example.Bot.Dialogue.MainDialogueMenu;
 
 import main.java.org.example.Bot.Dialogue.Answer;
 import main.java.org.example.Bot.Dialogue.IStage;
+import main.java.org.example.Bot.Dialogue.Interfaces.PreValidationResponse;
 import main.java.org.example.Bot.Files.MyFiles;
 import main.java.org.example.Bot.Files.ResourcesFiles;
 import main.java.org.example.Bot.TG.TGSender;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
+
+import static main.java.org.example.Bot.Dialogue.Interfaces.ValidationResult.*;
 
 public class NewRefereeStage extends IStage
 {
@@ -27,14 +31,19 @@ public class NewRefereeStage extends IStage
 	}
 
 	@Override
-	public int preValidation(Answer answer)
+	public PreValidationResponse preValidation(Answer answer)
 	{
-		return stageNum;
+		if(Objects.equals(answer.getMessage(), "/NewReferee")) return new PreValidationResponse(REPEAT, stageNum);
+		return new PreValidationResponse(NOT_FOUND, -1);
 	}
 
 	@Override
 	public void addValidators()
 	{
-
+		validators.put(stageNum, (Answer) ->
+		{
+			TGSender.send("Вы и так уже в процессе добавления нового судьи, отправьте заполненный файл");
+			return false;
+		});
 	}
 }

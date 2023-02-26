@@ -2,10 +2,10 @@ package main.java.org.example.Bot.Dialogue.MainDialogueMenu;
 
 import main.java.org.example.Bot.Dialogue.Answer;
 import main.java.org.example.Bot.Dialogue.IStage;
+import main.java.org.example.Bot.Dialogue.Interfaces.PreValidationResponse;
 import main.java.org.example.Bot.Excel.ExcelParser;
 import main.java.org.example.Bot.Excel.RefereePosition;
 import main.java.org.example.Bot.Excel.Templates.Competition;
-import main.java.org.example.Bot.Excel.Templates.CompetitionMember;
 import main.java.org.example.Bot.Files.MyFiles;
 import main.java.org.example.Bot.Files.ResourcesFiles;
 import main.java.org.example.Bot.TG.TGSender;
@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+
+import static main.java.org.example.Bot.Dialogue.Interfaces.ValidationResult.*;
 
 public class NewCompetitionStage extends IStage
 {
@@ -38,15 +40,22 @@ public class NewCompetitionStage extends IStage
 	}
 
 	@Override
-	public int preValidation(Answer answer)
+	public PreValidationResponse preValidation(Answer answer)
 	{
-		if(answer.hasDocument()) return 6;
-		return stageNum;
+		if(Objects.equals(answer.getMessage(), "/NewCompetition")) return new PreValidationResponse(REPEAT, stageNum);
+		if(answer.hasDocument()) return new PreValidationResponse(NEXT_STAGE, 6);
+		return new PreValidationResponse(NOT_FOUND, -1);
 	}
 
 	@Override
 	public void addValidators()
 	{
+		validators.put(stageNum, (Answer) ->
+		{
+			TGSender.send("Вы и так уже в процессе добавления нового соревнования, отправьте заполненный файл");
+			return false;
+		});
+
 		validators.put(6, (Answer answer) ->
 		{
 			ExcelParser parser;
@@ -58,10 +67,11 @@ public class NewCompetitionStage extends IStage
 				boolean find = true;
 				if(Objects.equals(parser.readCell(0, 1).getStringCellValue(), "Шаблон проведенного соревнования\n" + "Для использования в учетной " + "базе FEMIDA"))
 					if(Objects.equals(parser.readCell(11, 2).getStringCellValue(), "Фамилия"))
-						if(Objects.equals(parser.readCell(6, 2).getStringCellValue(), "Название соревнования:"))
-						{
-							find = false;
-						}
+						if(Objects.equals(parser.readCell(11, 7).getStringCellValue(), "Рейтинг"))
+							if(Objects.equals(parser.readCell(6, 2).getStringCellValue(), "Название соревнования:"))
+							{
+								find = false;
+							}
 
 				if(find)
 				{
@@ -92,7 +102,11 @@ public class NewCompetitionStage extends IStage
 					needAReport = true;
 				}
 
-				if(needAReport) TGSender.send(report);
+				if(needAReport)
+				{
+					TGSender.send(report);
+					return false;
+				}
 
 				List<Integer> members = new ArrayList<>();
 				List<String> carpets = new ArrayList<>();

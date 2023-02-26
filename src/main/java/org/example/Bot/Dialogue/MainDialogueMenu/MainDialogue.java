@@ -17,7 +17,6 @@ public class MainDialogue extends IDialogue
 		stages.add(new NewCompetitionStage(stages));    //3  NewCompetition
 		stages.add(null);                                   //4  Register
 		stages.add(null);                                   //5  GetPhone
-		stages.add(new CompetitionStage(stages));       //6  GetCompetitionFile
 
 
 		changeStage(0);

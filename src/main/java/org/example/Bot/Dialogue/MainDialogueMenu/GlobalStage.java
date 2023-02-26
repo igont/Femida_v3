@@ -1,5 +1,6 @@
 package main.java.org.example.Bot.Dialogue.MainDialogueMenu;
 
+import main.java.org.example.Bot.Dialogue.Interfaces.PreValidationResponse;
 import main.java.org.example.Main;
 import main.java.org.example.Bot.Dialogue.Answer;
 import main.java.org.example.Bot.Dialogue.IStage;
@@ -14,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static main.java.org.example.Bot.Dialogue.Interfaces.ValidationResult.*;
+
 public class GlobalStage extends IStage // Стадия приветствия
 {
 	public GlobalStage(List<IStage> list)
@@ -24,7 +27,33 @@ public class GlobalStage extends IStage // Стадия приветствия
 	@Override
 	public void action()
 	{
-		String text = """
+
+	}
+
+	@Override
+	public PreValidationResponse preValidation(Answer answer)
+	{
+		if(Objects.equals(answer.getMessage(), "/start")) return new PreValidationResponse(FORCE_REPEAT, 0);
+		if(Objects.equals(answer.getMessage(), "/NewReferee")) return new PreValidationResponse(NEXT_STAGE, 1);
+		if(Objects.equals(answer.getMessage(), "/GlobalRating")) return new PreValidationResponse(NEXT_STAGE, 2);
+		if(Objects.equals(answer.getMessage(), "/NewCompetition")) return new PreValidationResponse(NEXT_STAGE, 3);
+		if(Objects.equals(answer.getMessage(), "/Register")) return new PreValidationResponse(NEXT_STAGE, 4);
+
+		if(answer.hasPhone())
+		{
+			Main.updateHandler.activeUser.phoneNumber = answer.getPhone();
+			return new PreValidationResponse(NEXT_STAGE, 5);
+		}
+
+		return new PreValidationResponse(NOT_FOUND, -1);
+	}
+
+	@Override
+	public void addValidators()
+	{
+		validators.put(0, (Answer) ->
+		{
+			String text = """
 				Добро пожаловать в систему учета рейтинга спортивных судей "FEMIDA".
 
 				С помощью бота вы сможете выполнять следующие действия:
@@ -41,29 +70,10 @@ public class GlobalStage extends IStage // Стадия приветствия
 				⬇️*Войти в систему:*
 				/Register""";
 
-		TGSender.send(text);
-	}
+			TGSender.send(text);
+			return false;
+		});
 
-	@Override
-	public int preValidation(Answer answer)
-	{
-		if(Objects.equals(answer.getMessage(), "/NewReferee")) return 1;
-		if(Objects.equals(answer.getMessage(), "/GlobalRating")) return 2;
-		if(Objects.equals(answer.getMessage(), "/NewCompetition")) return 3;
-		if(Objects.equals(answer.getMessage(), "/Register")) return 4;
-
-		if(answer.hasPhone())
-		{
-			Main.updateHandler.activeUser.phoneNumber = answer.getPhone();
-			return 5;
-		}
-
-		return stageNum;
-	}
-
-	@Override
-	public void addValidators()
-	{
 		//NewReferee
 		validators.put(1, (Answer answer) -> true);
 
@@ -111,5 +121,6 @@ public class GlobalStage extends IStage // Стадия приветствия
 			TGSender.send("Выполняем поиск по номеру: " + Main.updateHandler.activeUser.phoneNumber);
 			return false;
 		});
+
 	}
 }

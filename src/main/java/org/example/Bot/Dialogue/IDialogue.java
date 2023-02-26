@@ -1,8 +1,14 @@
 package main.java.org.example.Bot.Dialogue;
 
+import main.java.org.example.Bot.Dialogue.Interfaces.PreValidationResponse;
+import main.java.org.example.Bot.Dialogue.Interfaces.ValidationResult;
+import main.java.org.example.Bot.TG.TGSender;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
+import java.util.Stack;
+
+import static main.java.org.example.Bot.Dialogue.Interfaces.ValidationResult.*;
 
 public abstract class IDialogue
 {
@@ -24,29 +30,48 @@ public abstract class IDialogue
 	public void receiveUpdate(Update update)
 	{
 		Answer answer = new Answer(update);
-
-		// Сначала проверяем основную стадию
-		if(!validateStage(answer, currentStage))
+		PreValidationResponse preValidationResponse = currentStage.preValidation(answer);
+		if(validateStage(preValidationResponse, currentStage, answer) == NOT_FOUND)
 		{
-			// Потом проверяем нулевую стадию с глобальными командами
-			if(currentStage.stageNum != 0) validateStage(answer, stages.get(0));
+			preValidationResponse = stages.get(0).preValidation(answer);
+			if(validateStage(preValidationResponse, stages.get(0), answer) == NOT_FOUND)
+			{
+				TGSender.send("Такой команды я не знаю");
+			}
 		}
-		System.out.println(answer);
 	}
 
-	private boolean validateStage(Answer answer, IStage checkedStage)
+	private ValidationResult validateStage(PreValidationResponse preValidationResponse, IStage checkedStage, Answer answer)
 	{
-		answer.setNextStage(checkedStage.preValidation(answer));
-
-		if(checkedStage.getStageNum() == answer.getNextStage()) return false;
-
-		if(checkedStage.validators.get(answer.getNextStage()).validate(answer))
+		switch(preValidationResponse.getValidationResult())
 		{
-			changeStage(answer.getNextStage());
-			answer.setNextStage(answer.getNextStage());
-			return true;
+			case FORCE_REPEAT ->
+			{
+				if(checkedStage.validators.get(preValidationResponse.getNextStage()).validate(answer))
+				{
+					changeStage(preValidationResponse.getNextStage());
+				}
+			}
+			case NEXT_STAGE ->
+			{
+				if(checkedStage.stageNum != preValidationResponse.getNextStage())
+				{
+					if(checkedStage.validators.get(preValidationResponse.getNextStage()).validate(answer))
+					{
+						changeStage(preValidationResponse.getNextStage());
+					}
+				}
+			}
+			case NOT_FOUND ->
+			{
+				return NOT_FOUND;
+			}
+			case REPEAT ->
+			{
+				checkedStage.validators.get(preValidationResponse.getNextStage()).validate(null);
+			}
 		}
-		return false;
+		return NEXT_STAGE;
 	}
 
 	public int getCurrentStage()
