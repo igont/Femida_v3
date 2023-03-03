@@ -64,16 +64,7 @@ public class NewCompetitionStage extends IStage
 				File excelBookFile = MyFiles.getFile(MyFiles.TEMP_ROOT + answer.getFileName());
 				parser = new ExcelParser(excelBookFile);
 
-				boolean find = true;
-				if(Objects.equals(parser.readCell(0, 1).getStringCellValue(), "Шаблон проведенного соревнования\n" + "Для использования в учетной " + "базе FEMIDA"))
-					if(Objects.equals(parser.readCell(11, 2).getStringCellValue(), "Фамилия"))
-						if(Objects.equals(parser.readCell(11, 7).getStringCellValue(), "Рейтинг"))
-							if(Objects.equals(parser.readCell(6, 2).getStringCellValue(), "Название соревнования:"))
-							{
-								find = false;
-							}
-
-				if(find)
+				if(!isBookOriginal(parser))
 				{
 					TGSender.send("❗️Структура файла была изменена. Вы можете лишь добавлять текст в зеленые ячейки");
 					return false;
@@ -83,30 +74,7 @@ public class NewCompetitionStage extends IStage
 				String place = parser.readCell(7, 3).getStringCellValue();
 				Date date = parser.readCell(8, 3).getDateCellValue();
 
-				String report = "*❗️Необходимо добавить:*\n";
-				boolean needAReport = false;
-
-				if(Objects.equals(title, ""))
-				{
-					report += " - Название\n";
-					needAReport = true;
-				}
-				if(Objects.equals(place, ""))
-				{
-					report += " - Город\n";
-					needAReport = true;
-				}
-				if(Objects.equals(date, null))
-				{
-					report += " - Дату\n";
-					needAReport = true;
-				}
-
-				if(needAReport)
-				{
-					TGSender.send(report);
-					return false;
-				}
+				if(!isDataFilled(title, place, date)) return false;
 
 				List<Integer> members = new ArrayList<>();
 				List<String> carpets = new ArrayList<>();
@@ -168,6 +136,7 @@ public class NewCompetitionStage extends IStage
 					TGSender.send("*❗️В соревновании нет ни одного участника.*\n - Необходим минимум один человек");
 					return false;
 				}
+
 				Competition competition = new Competition(title, place, date, membersArr, carpetsArr, gradesArr, positionsArr);
 				Main.sql.addCompetition(competition);
 				TGSender.send("✅Соревнование успешно добавлено");
@@ -179,5 +148,49 @@ public class NewCompetitionStage extends IStage
 			}
 			return false;
 		});
+	}
+
+	private static boolean isDataFilled(String title, String place, Date date)
+	{
+		String report = "*❗️Необходимо добавить:*\n";
+		boolean needAReport = false;
+
+		if(Objects.equals(title, ""))
+		{
+			report += " - Название\n";
+			needAReport = true;
+		}
+
+		if(Objects.equals(place, ""))
+		{
+			report += " - Город\n";
+			needAReport = true;
+		}
+
+		if(Objects.equals(date, null))
+		{
+			report += " - Дату\n";
+			needAReport = true;
+		}
+
+		if(needAReport)
+		{
+			TGSender.send(report);
+			return false;
+		}
+		return true;
+	}
+
+	private static boolean isBookOriginal(ExcelParser parser)
+	{
+		boolean find = false;
+		if(Objects.equals(parser.readCell(0, 1).getStringCellValue(), "Шаблон проведенного соревнования\n" + "Для использования в учетной " + "базе FEMIDA"))
+			if(Objects.equals(parser.readCell(11, 2).getStringCellValue(), "Фамилия"))
+				if(Objects.equals(parser.readCell(11, 7).getStringCellValue(), "Рейтинг"))
+					if(Objects.equals(parser.readCell(6, 2).getStringCellValue(), "Название соревнования:"))
+					{
+						find = true;
+					}
+		return find;
 	}
 }
