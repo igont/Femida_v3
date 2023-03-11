@@ -23,9 +23,9 @@ public class MyFiles
 		String[] split = classJar.split("/");
 		for(int i = 1; i < split.length; i++)
 		{
-			if(Objects.equals(split[i], "Femida.jar!")) break;
+			if(Objects.equals(split[i], "Femida_v3.jar!")) break;
 			path += split[i] + "/";
-			if(Objects.equals(split[i], "Femida_v0.3")) break;
+			if(Objects.equals(split[i], "Femida_v3")) break;
 		}
 
 		if(path.startsWith("home"))

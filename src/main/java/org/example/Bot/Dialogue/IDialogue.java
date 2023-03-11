@@ -31,9 +31,13 @@ public abstract class IDialogue
 	{
 		Answer answer = new Answer(update);
 		PreValidationResponse preValidationResponse = currentStage.preValidation(answer);
-		if(validateStage(preValidationResponse, currentStage, answer) == NOT_FOUND)
+
+
+		if(validateStage(preValidationResponse, currentStage, answer) == NOT_FOUND) // Проверяем данную стадию диалога на наличие обработчика команды
 		{
 			preValidationResponse = stages.get(0).preValidation(answer);
+
+			// Если не нашли, то проверяем глобальную стадию со старотвыми командами (стадия 0)
 			if(validateStage(preValidationResponse, stages.get(0), answer) == NOT_FOUND)
 			{
 				TGSender.send("Такой команды я не знаю");

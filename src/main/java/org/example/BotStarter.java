@@ -21,7 +21,6 @@ public class BotStarter extends TelegramLongPollingBot
 	@Override
 	public void onUpdateReceived(Update update)
 	{
-		//Main.updateHandler.authoriseUser(update);
 		Checkpoint.in(update);
 	}
 }

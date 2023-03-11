@@ -7,12 +7,14 @@ public class Checkpoint
 {
 	public static void in(Update update) // Получение сообщения ботом
 	{
-		Main.safeUpdateParser.setUpdate(update);
+		Main.safeUpdateParser.setUpdate(update); // Просто сохранение апдейта
 
 		Main.updateHandler.authoriseUser(update); // Регистрация пользователя
 
+        // Если с пользоавтелем не ведется ниакакого диалога, то создается новый диалог
 		if(Main.updateHandler.activeUser.dialogue.stages == null) Main.updateHandler.activeUser.dialogue.start();
 
+        // Обработка запроса с помощью диалога
 		Main.updateHandler.activeUser.dialogue.receiveUpdate(update);
 	}
 }

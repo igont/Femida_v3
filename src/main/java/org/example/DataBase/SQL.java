@@ -15,8 +15,8 @@ public class SQL
 {
 	public DataBase mainDatabase;
 	public static final String DB_URL = "jdbc:postgresql://localhost:5432/";
-	public static final String USER = "igor_admin";
-	public static final String PASSWORD = "123321321123";
+	public static final String USER = "secret_user";
+	public static final String PASSWORD = "secret_pass";
 
 	public SQL()
 	{
