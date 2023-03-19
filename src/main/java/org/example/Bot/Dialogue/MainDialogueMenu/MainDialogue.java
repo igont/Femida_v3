@@ -11,10 +11,10 @@ public class MainDialogue extends IDialogue
 	public void start()
 	{
 		stages = new ArrayList<>();
-		stages.add(new GlobalStage(stages));            //0
-		stages.add(new NewRefereeStage(stages));        //1  NewReferee
+		stages.add(new GlobalStage(stages));            	//0
+		stages.add(new NewRefereeStage(stages));        	//1  NewReferee
 		stages.add(null);                                   //2  GlobalRating
-		stages.add(new NewCompetitionStage(stages));    //3  NewCompetition
+		stages.add(new NewCompetitionStage(stages));    	//3  NewCompetition
 		stages.add(null);                                   //4  Register
 		stages.add(null);                                   //5  GetPhone
 

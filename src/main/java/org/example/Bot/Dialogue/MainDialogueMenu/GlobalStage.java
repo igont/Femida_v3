@@ -38,6 +38,8 @@ public class GlobalStage extends IStage // Стадия приветствия
 		if(Objects.equals(answer.getMessage(), "/GlobalRating")) return new PreValidationResponse(NEXT_STAGE, 2);
 		if(Objects.equals(answer.getMessage(), "/NewCompetition")) return new PreValidationResponse(NEXT_STAGE, 3);
 		if(Objects.equals(answer.getMessage(), "/Register")) return new PreValidationResponse(NEXT_STAGE, 4);
+		if(Objects.equals(answer.getMessage(), "/PlanCompetition")) return new PreValidationResponse(NEXT_STAGE, 6);
+		if(Objects.equals(answer.getMessage(), "/Account")) return new PreValidationResponse(NEXT_STAGE, 7);
 
 		if(answer.hasPhone())
 		{
@@ -54,21 +56,28 @@ public class GlobalStage extends IStage // Стадия приветствия
 		validators.put(0, (Answer) ->
 		{
 			String text = """
-				Добро пожаловать в систему учета рейтинга спортивных судей "FEMIDA".
+					Добро пожаловать в систему учета рейтинга спортивных судей "FEMIDA".
 
-				С помощью бота вы сможете выполнять следующие действия:
+					С помощью бота вы сможете выполнять следующие действия:
 
-				➕*Зарегистрировать нового судью:*
-				/NewReferee
+					➕*Зарегистрировать нового судью:*
+					/NewReferee
 
-				➕*Создать новое соревнование:*
-				/NewCompetition
+					➕*Создать новое соревнование:*
+					/NewCompetition
 
-				📃*Вывести рейтинг всех судей:*
-				/GlobalRating
-								
-				⬇️*Войти в систему:*
-				/Register""";
+					📃*Вывести рейтинг всех судей:*
+					/GlobalRating
+									
+					⬇️*Войти в систему:*
+					/Register
+					
+					🕐*Запланировать соревнование*
+					/PlanCompetition
+					
+					😐*Мой аккаунт*
+					/Account
+					""";
 
 			TGSender.send(text);
 			return false;
@@ -80,7 +89,7 @@ public class GlobalStage extends IStage // Стадия приветствия
 		// GlobalRating
 		validators.put(2, (Answer) ->
 		{
-			TGSender.send("Еще не доступно...");
+			TGSender.send("❗️Еще не доступно...");
 			return false;
 		});
 
@@ -119,6 +128,18 @@ public class GlobalStage extends IStage // Стадия приветствия
 		validators.put(5, (Answer) ->
 		{
 			TGSender.send("Выполняем поиск по номеру: " + Main.updateHandler.activeUser.phoneNumber);
+			return false;
+		});
+
+		validators.put(6, (Answer) ->
+		{
+			TGSender.send("❗️️️️Еще не доступно...");
+			return false;
+		});
+
+		validators.put(7, (Answer) ->
+		{
+			TGSender.send("❗️️️️Еще не доступно...");
 			return false;
 		});
 

@@ -39,6 +39,8 @@ public class DataBase
 				try
 				{
 					SQL.execute("create user " + USER + " with encrypted password '" + PASSWORD + "';", statement);
+					SQL.execute("grant usage on schema public to " + USER, statement);
+					SQL.execute("grant create on schema public to " + USER, statement);
 				}
 				catch(SQLException exc)
 				{

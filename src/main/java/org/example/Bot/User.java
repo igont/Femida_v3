@@ -1,4 +1,4 @@
-package main.java.org.example.Bot.TG;
+package main.java.org.example.Bot;
 
 import main.java.org.example.Bot.Dialogue.IDialogue;
 import main.java.org.example.Bot.Dialogue.MainDialogueMenu.MainDialogue;

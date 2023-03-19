@@ -55,6 +55,7 @@ public class Table
 		}
 		catch(SQLException e)
 		{
+			//e.printStackTrace();
 			System.out.println("Таблица " + name + " уже существует");
 		}
 	}
@@ -97,13 +98,13 @@ public class Table
 					{
 						case INTEGER -> ps.setInt(counter, (int) column.data());
 						case TEXT -> ps.setString(counter, (String) column.data());
-						case DATE -> ps.setDate(counter, new Date(((java.util.Date) column.data()).getTime()));
+						case DATE -> ps.setDate(counter, (Date) column.data());
+						//case DATE -> ps.setDate(counter, new Date(((java.util.Date) column.data()).getTime()));
 						case INTEGER_ARRAY -> ps.setArray(counter, currentBase.connection.createArrayOf("integer", new Object[]{column.data()}));
 						case TEXT_ARRAY -> ps.setArray(counter, currentBase.connection.createArrayOf("text", new Object[]{column.data()}));
 						case REAL_ARRAY -> ps.setArray(counter, currentBase.connection.createArrayOf("float", new Object[]{column.data()}));
 					}
 				}
-
 			}
 			ps.execute();
 		}

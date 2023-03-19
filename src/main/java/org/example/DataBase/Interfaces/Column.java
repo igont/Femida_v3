@@ -16,7 +16,13 @@ public final class Column
 		this.type = type;
 		this.data = data;
 	}
-
+	
+	public Column(String name, Type type)
+	{
+		this.name = name;
+		this.type = type;
+	}
+	
 	public String name()
 	{
 		return name;

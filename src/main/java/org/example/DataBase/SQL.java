@@ -15,18 +15,16 @@ public class SQL
 {
 	public DataBase mainDatabase;
 	public static final String DB_URL = "jdbc:postgresql://localhost:5432/";
-	public static final String USER = "secret_user";
-	public static final String PASSWORD = "secret_pass";
+	public static final String USER = "postgres";
+	public static final String PASSWORD = "postgres";
 
 	public SQL()
 	{
 		initDriver();
 
-		mainDatabase = new DataBase("main");
+		mainDatabase = new DataBase("postgres");
 		createRefereeTable();
 		createCompetitionTable();
-
-
 	}
 
 	private static void initDriver()
@@ -46,17 +44,17 @@ public class SQL
 	{
 		List<Column> refereeColumns = new ArrayList<>();
 
-		refereeColumns.add(new Column("id", SMALLSERIAL, null));
-		refereeColumns.add(new Column("surname", TEXT, null));
-		refereeColumns.add(new Column("name", TEXT, null));
-		refereeColumns.add(new Column("patronymic", TEXT, null));
-		refereeColumns.add(new Column("city", TEXT, null));
-		refereeColumns.add(new Column("phone", TEXT, null));
-		refereeColumns.add(new Column("calc_points", REAL, null));
-		refereeColumns.add(new Column("category", TEXT, null));
-		refereeColumns.add(new Column("birth_year", INTEGER, null));
-		refereeColumns.add(new Column("club_type", TEXT, null));
-		refereeColumns.add(new Column("club_name", TEXT, null));
+		refereeColumns.add(new Column("id", SMALLSERIAL));
+		refereeColumns.add(new Column("surname", TEXT));
+		refereeColumns.add(new Column("name", TEXT));
+		refereeColumns.add(new Column("patronymic", TEXT));
+		refereeColumns.add(new Column("city", TEXT));
+		refereeColumns.add(new Column("phone", TEXT));
+		refereeColumns.add(new Column("calc_points", REAL));
+		refereeColumns.add(new Column("category", TEXT));
+		refereeColumns.add(new Column("birth", DATE));
+		refereeColumns.add(new Column("club_type", TEXT));
+		refereeColumns.add(new Column("club_name", TEXT));
 
 		Table table = new Table("referee");
 		mainDatabase.addTable(table);
@@ -77,7 +75,7 @@ public class SQL
 						case "city" -> referee.getCity();
 						case "phone" -> referee.getPhone();
 						case "category" -> referee.getCategory();
-						case "birth_year" -> referee.getBirth();
+						case "birth" -> referee.getBirth();
 						case "club_type" -> referee.getClubType();
 						case "club_name" -> referee.getClubName();
 						default -> null;
@@ -114,14 +112,14 @@ public class SQL
 	{
 		List<Column> competitionColumns = new ArrayList<>();
 
-		competitionColumns.add(new Column("id", SMALLSERIAL, null));
-		competitionColumns.add(new Column("title", TEXT, null));
-		competitionColumns.add(new Column("place", TEXT, null));
-		competitionColumns.add(new Column("date", DATE, null));
-		competitionColumns.add(new Column("members", INTEGER_ARRAY, null));
-		competitionColumns.add(new Column("carpets", TEXT_ARRAY, null));
-		competitionColumns.add(new Column("grades", REAL_ARRAY, null));
-		competitionColumns.add(new Column("positions", TEXT_ARRAY, null));
+		competitionColumns.add(new Column("id", SMALLSERIAL));
+		competitionColumns.add(new Column("title", TEXT));
+		competitionColumns.add(new Column("place", TEXT));
+		competitionColumns.add(new Column("date", DATE));
+		competitionColumns.add(new Column("members", INTEGER_ARRAY));
+		competitionColumns.add(new Column("carpets", TEXT_ARRAY));
+		competitionColumns.add(new Column("grades", REAL_ARRAY));
+		competitionColumns.add(new Column("positions", TEXT_ARRAY));
 
 		Table table = new Table("competitions");
 		mainDatabase.addTable(table);

@@ -20,7 +20,6 @@ public class TGLogger
 			s += String.format(" [%s],", var.toString());
 		}
 		send(s.substring(0, s.length() - 1));
-
 	}
 
 	public static void send(String message)
