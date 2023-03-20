@@ -13,7 +13,6 @@ public class Main
 {
 	public static final BotStarter myBot = new BotStarter();
 	public static final UpdateHandler updateHandler = new UpdateHandler();
-	public static SafeUpdateParser safeUpdateParser = new SafeUpdateParser();
 	public static SQL sql = new SQL();
 
 	public static void main(String[] args)

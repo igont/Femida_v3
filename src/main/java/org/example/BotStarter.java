@@ -26,9 +26,9 @@ public class BotStarter extends TelegramLongPollingBot
 		Main.updateHandler.authoriseUser(update); // Регистрация пользователя
 		
 		// Если с пользоавтелем не ведется ниакакого диалога, то создается новый диалог
-		if(Main.updateHandler.activeUser.dialogue.stages == null) Main.updateHandler.activeUser.dialogue.start();
+		if(Main.updateHandler.getActiveUser().dialogue.stages == null) Main.updateHandler.getActiveUser().dialogue.start();
 		
 		// Обработка запроса с помощью диалога
-		Main.updateHandler.activeUser.dialogue.receiveUpdate(update);
+		Main.updateHandler.getActiveUser().dialogue.receiveUpdate(update);
 	}
 }

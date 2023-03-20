@@ -24,6 +24,45 @@ public class Referee
 	private String clubType;
 	private String clubName;
 	
+	public Referee(int id)
+	{
+		Connection connection = Main.sql.mainDatabase.connection;
+		ResultSet resultSet;
+		
+		PreparedStatement preparedStatement;
+		try
+		{
+			preparedStatement = connection.prepareStatement("select * from referee where id = ?;");
+			preparedStatement.setInt(1, id);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			System.out.println(preparedStatement);
+			
+			if(resultSet == null)
+			{
+				System.out.printf("❗️Referee not found id: [%s]\n", id);
+			}
+			else if(resultSet.next())
+			{
+				surname = resultSet.getString("surname");
+				name = resultSet.getString("name");
+				patronymic = resultSet.getString("patronymic");
+				birth = resultSet.getDate("birth");
+				city = resultSet.getString("city");
+				phone = resultSet.getString("phone");
+				category = resultSet.getString("category");
+				clubType = resultSet.getString("club_type");
+				clubName = resultSet.getString("club_name");
+				refereeID = id;
+			}
+		}
+		catch(SQLException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+	
 	public Referee(String surname, String name, String patronymic, Date birth, String city, String phone, String category, int refereeID, String clubType, String clubName)
 	{
 		this.surname = surname;
@@ -55,6 +94,27 @@ public class Referee
 		return "Referee{" + "surname='" + surname + '\'' + ", name='" + name + '\'' + ", patronymic='" + patronymic + '\'' + ", birth=" + birth + ", city='" + city + '\'' + ", phone='" + phone + '\'' + ", refereeID=" + refereeID + '}';
 	}
 	
+	public String toNiceString()
+	{
+		String out = """
+				*Фамилия:* `%s`
+				*Имя:* `%s`
+				*Отчество:* `%s`
+		
+				*Дата рождения:* `%s`
+				*Город:* `%s`
+				*Номер телефона:* `%s`
+		
+				*Категория:* `%s`
+				*Клуб:* `%s`
+				
+				`---------------------------------
+				Эта информация видна только вам и
+				администратору`""";
+		
+		return String.format(out, surname, name, patronymic, birth, city, phone, category, clubType + " " + clubName);
+	}
+	
 	public int findRefereeID()
 	{
 		Connection connection = Main.sql.mainDatabase.connection;
@@ -63,22 +123,53 @@ public class Referee
 		PreparedStatement preparedStatement;
 		try
 		{
-			preparedStatement = connection.prepareStatement("select * from referee where name = ? and surname = ? and patronymic = ?;");
-			preparedStatement.setString(1, name);
-			preparedStatement.setString(2, surname);
+			preparedStatement = connection.prepareStatement("select * from referee where surname = ? and name = ? and patronymic = ?;");
+			preparedStatement.setString(1, surname);
+			preparedStatement.setString(2, name);
 			preparedStatement.setString(3, patronymic);
-			resultSet = preparedStatement.getResultSet();
+			resultSet = preparedStatement.executeQuery();
 			
-			if(resultSet.next())
+			if(resultSet == null)
 			{
-				refereeID = resultSet.getInt("id");
-				return refereeID;
-			}
-			else
-			{
-				System.out.printf("Referee not found [%s] [%s] [%s]\n", name, surname, patronymic);
+				System.out.printf("❗️Referee not found [%s] [%s] [%s]\n", surname, name, patronymic);
 				return -1;
 			}
+			else if(resultSet.next())
+			{
+				return resultSet.getInt("id");
+			}
+			return -1;
+		}
+		catch(SQLException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public static int findRefereeByPhone(String phone)
+	{
+		Connection connection = Main.sql.mainDatabase.connection;
+		ResultSet resultSet;
+		
+		PreparedStatement preparedStatement;
+		try
+		{
+			preparedStatement = connection.prepareStatement("select * from referee where phone = ?;");
+			preparedStatement.setString(1, phone);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			System.out.println(preparedStatement);
+			if(resultSet == null)
+			{
+				System.out.printf("❗️Referee not found phone: [%s]\n", phone);
+				return -1;
+			}
+			else if(resultSet.next())
+			{
+				return resultSet.getInt("id");
+			}
+			return -1;
 		}
 		catch(SQLException e)
 		{

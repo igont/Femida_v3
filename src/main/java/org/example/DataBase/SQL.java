@@ -5,6 +5,8 @@ import main.java.org.example.Bot.Excel.Templates.Referee;
 import main.java.org.example.DataBase.Interfaces.Column;
 import main.java.org.example.DataBase.Interfaces.DataBase;
 import main.java.org.example.DataBase.Interfaces.Table;
+import main.java.org.example.Main;
+import org.apache.poi.util.StringUtil;
 
 import java.sql.*;
 import java.util.*;
@@ -124,6 +126,61 @@ public class SQL
 		Table table = new Table("competitions");
 		mainDatabase.addTable(table);
 		table.init(competitionColumns);
+	}
+	public String getGlobalRating()
+	{
+		ResultSet resultSet;
+		String result = "";
+		try
+		{
+			
+			resultSet = Main.sql.mainDatabase.statement.executeQuery("Select * from referee order by calc_points desc;");
+			
+			while(true)
+			{
+				try
+				{
+					if(!resultSet.next()) break;
+				}catch(SQLException e)
+				{
+					throw new RuntimeException(e);
+				}
+				String points = "?";
+				String surname = "?";
+				String name = "?";
+				String patronymic = "?";
+				
+				points = resultSet.getInt("calc_points") + "";
+				surname = resultSet.getString("surname");
+				
+				try
+				{
+					name = resultSet.getString("name").toUpperCase().charAt(0) + "";
+					
+				}catch(StringIndexOutOfBoundsException ignored)
+				{
+				}
+				try
+				{
+					patronymic = resultSet.getString("patronymic").toUpperCase().charAt(0) + "";
+					
+				}catch(StringIndexOutOfBoundsException ignored)
+				{
+				}
+				
+				int spaces = 4 - points.length();
+				
+				String str = StringUtil.repeat((' '), spaces);
+				
+				String add = String.format("  %s| %s %s. %s.\n", points + str, surname, name, patronymic);
+				
+				result += add;
+			}
+		}catch(SQLException e)
+		{
+			throw new RuntimeException(e);
+		}
+		return result;
 	}
 
 	public static void execute(PreparedStatement preparedStatement)

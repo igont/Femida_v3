@@ -1,6 +1,7 @@
 package main.java.org.example.Bot.Dialogue.MainDialogueMenu;
 
 import main.java.org.example.Bot.Dialogue.Interfaces.PreValidationResponse;
+import main.java.org.example.Bot.Excel.Templates.Referee;
 import main.java.org.example.Main;
 import main.java.org.example.Bot.Dialogue.Answer;
 import main.java.org.example.Bot.Dialogue.IStage;
@@ -11,6 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
+import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -43,7 +45,7 @@ public class GlobalStage extends IStage // Стадия приветствия
 
 		if(answer.hasPhone())
 		{
-			Main.updateHandler.activeUser.phoneNumber = answer.getPhone();
+			Main.updateHandler.getActiveUser().phoneNumber = answer.getPhone();
 			return new PreValidationResponse(NEXT_STAGE, 5);
 		}
 
@@ -89,7 +91,8 @@ public class GlobalStage extends IStage // Стадия приветствия
 		// GlobalRating
 		validators.put(2, (Answer) ->
 		{
-			TGSender.send("❗️Еще не доступно...");
+			String rating = Main.sql.getGlobalRating();
+			TGSender.send("`Баллы | ФИО судьи\n------+-------------------\n" + rating + "`");
 			return false;
 		});
 
@@ -101,7 +104,7 @@ public class GlobalStage extends IStage // Стадия приветствия
 		{
 			SendMessage sendMessage = new SendMessage();
 			sendMessage.setChatId(SafeUpdateParser.getChatID());
-			sendMessage.setText("Разрешите доступ к номеру телефона для автоматической регистрации");
+			sendMessage.setText("Разрешите доступ к номеру телефона для автоматической регистрации (Конпка снизу)");
 
 			ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
 			sendMessage.setReplyMarkup(replyKeyboardMarkup);
@@ -127,7 +130,16 @@ public class GlobalStage extends IStage // Стадия приветствия
 		//Phone validation
 		validators.put(5, (Answer) ->
 		{
-			TGSender.send("Выполняем поиск по номеру: " + Main.updateHandler.activeUser.phoneNumber);
+			String phone = Main.updateHandler.getActiveUser().phoneNumber;
+			
+			phone = "8" + phone.substring(phone.length()-10);
+			
+			TGSender.send("*Выполняем поиск по номеру:* " + phone);
+			
+			int id = Referee.findRefereeByPhone(phone);
+			Referee referee = new Referee(id);
+			
+			TGSender.send(referee.toNiceString());
 			return false;
 		});
 

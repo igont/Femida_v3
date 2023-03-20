@@ -16,7 +16,7 @@ public class UpdateHandler
 	 */
 	private List<User> users;
 
-	public User activeUser;
+	private int activeUser;
 
 	public UpdateHandler()
 	{
@@ -31,19 +31,26 @@ public class UpdateHandler
 		User newUser = new User(fromName);
 
 		boolean isFind = false;
-		for(User user : users)
+		
+		for(int i = 0; i < users.size(); i++)
 		{
+			User user = users.get(i);
 			if(Objects.equals(user.name, newUser.name))
 			{
-				activeUser = user;
+				activeUser = i;
 				isFind = true;
 			}
 		}
 
 		if(!isFind)
 		{
-			activeUser = newUser;
 			users.add(newUser);
+			activeUser = users.size()-1;
 		}
+	}
+	
+	public User getActiveUser()
+	{
+		return users.get(activeUser);
 	}
 }
