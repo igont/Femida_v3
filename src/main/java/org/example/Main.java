@@ -1,5 +1,6 @@
 package main.java.org.example;
 
+import main.java.org.example.Bot.Excel.ExcelStorage;
 import main.java.org.example.Bot.TG.SafeUpdateParser;
 import main.java.org.example.Bot.TG.UpdateHandler;
 import main.java.org.example.DataBase.SQL;
@@ -13,7 +14,8 @@ public class Main
 {
 	public static final BotStarter myBot = new BotStarter();
 	public static final UpdateHandler updateHandler = new UpdateHandler();
-	public static SQL sql = new SQL();
+	public static final ExcelStorage excelStorage = new ExcelStorage();
+	public static final SQL sql = new SQL();
 
 	public static void main(String[] args)
 	{

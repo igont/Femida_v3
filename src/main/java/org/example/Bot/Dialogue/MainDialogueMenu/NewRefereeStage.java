@@ -38,48 +38,12 @@ public class NewRefereeStage extends IStage
 	{
 		TGSender.send("Скачайте шаблон, внесите необходимые данные и перешлите обратно:");
 		
-		writeReferees();
-		
 		TGSender sender = new TGSender();
-		File fileToSend = MyFiles.getFile(TEMPLATE_REFEREE);
+		File fileToSend = Main.excelStorage.getRefereeBookFile();
 		sender.setSendFile(fileToSend);
 		sender.sendPreparedMessage();
 	}
 	
-	private void writeReferees()
-	{
-		List<Referee> allReferees = SQL.getAllReferees();
-		XSSFWorkbook book;
-		
-		try
-		{
-			book = new XSSFWorkbook(new FileInputStream(MyFiles.getFile(TEMPLATE_REFEREE)));
-		}
-		catch(IOException e)
-		{
-			throw new RuntimeException(e);
-		}
-		
-		for(int i = 0; i < allReferees.size(); i++)
-		{
-			Referee currentReferee = allReferees.get(i);
-			XSSFSheet sheet = book.getSheetAt(1);
-			
-			sheet.createRow(i+3).createCell(1).setCellValue(currentReferee.getSurname());
-			sheet.getRow(i+3).createCell(2).setCellValue(currentReferee.getName());
-			sheet.getRow(i+3).createCell(3).setCellValue(currentReferee.getPatronymic());
-
-		}
-		try
-		{
-			book.write(new FileOutputStream(MyFiles.getFile(TEMPLATE_REFEREE)));
-			book.close();
-		}
-		catch(IOException e)
-		{
-			throw new RuntimeException(e);
-		}
-	}
 	
 	@Override
 	public PreValidationResponse preValidation(Answer answer)
@@ -107,11 +71,11 @@ public class NewRefereeStage extends IStage
 				File excelBookFile = MyFiles.getFile(MyFiles.TEMP_ROOT + answer.getFileName());
 				parser = new ExcelParser(excelBookFile);
 				
-				if(!isBookOriginal(parser))
-				{
-					TGSender.send("❗️Структура файла была изменена. Вы можете лишь добавлять текст в зеленые ячейки");
-					return false;
-				}
+				//				if(!isBookOriginal(parser))
+				//				{
+				//					TGSender.send("❗️Структура файла была изменена. Вы можете лишь добавлять текст в зеленые ячейки");
+				//					return false;
+				//				}
 				
 				int row = 5;
 				
@@ -143,7 +107,7 @@ public class NewRefereeStage extends IStage
 					referee.setName(name);
 					referee.setPatronymic(patronymic);
 					
-					int id = referee.findRefereeID();
+					int id = Referee.findRefereeID(surname, name, patronymic);
 					
 					if(id > -1)
 					{
@@ -221,8 +185,12 @@ public class NewRefereeStage extends IStage
 		phone = phone.replaceAll("\\(", "");
 		phone = phone.replaceAll("\\)", "");
 		phone = phone.replaceAll("-", "");
-		phone = "8" + phone.substring(phone.length()-10);
+		if(phone.length() > 10)
+		{
+			phone = phone.substring(phone.length() - 10);
+		}
 		
+		phone = "8" + phone;
 		return phone;
 	}
 	

@@ -113,7 +113,7 @@ public class Referee
 		return String.format(out, surname, name, patronymic, birth, city, phone, category, clubType + " " + clubName);
 	}
 	
-	public int findRefereeID()
+	public static int findRefereeID(String surname, String name, String patronymic)
 	{
 		Connection connection = Main.sql.mainDatabase.connection;
 		ResultSet resultSet;

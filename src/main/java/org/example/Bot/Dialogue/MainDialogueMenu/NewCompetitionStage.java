@@ -6,6 +6,7 @@ import main.java.org.example.Bot.Dialogue.Interfaces.PreValidationResponse;
 import main.java.org.example.Bot.Excel.ExcelParser;
 import main.java.org.example.Bot.Excel.RefereePosition;
 import main.java.org.example.Bot.Excel.Templates.Competition;
+import main.java.org.example.Bot.Excel.Templates.Referee;
 import main.java.org.example.Bot.Files.MyFiles;
 import main.java.org.example.Bot.Files.ResourcesFiles;
 import main.java.org.example.Bot.TG.TGSender;
@@ -64,15 +65,15 @@ public class NewCompetitionStage extends IStage
 				File excelBookFile = MyFiles.getFile(MyFiles.TEMP_ROOT + answer.getFileName());
 				parser = new ExcelParser(excelBookFile);
 				
-				if(!isBookOriginal(parser))
-				{
-					TGSender.send("❗️️️️Структура файла была изменена. Вы можете лишь добавлять текст в зеленые ячейки");
-					return false;
-				}
+				//				if(!isBookOriginal(parser))
+				//				{
+				//					TGSender.send("❗️️️️Структура файла была изменена. Вы можете лишь добавлять текст в зеленые ячейки");
+				//					return false;
+				//				}
 				
 				String title = parser.getCell(6, 3).getStringCellValue();
 				String place = parser.getCell(7, 3).getStringCellValue();
-				Date date = parser.getCell(8, 3).getDateCellValue();
+				Date date = new java.sql.Date(parser.getCell(8, 3).getDateCellValue().getTime());
 				
 				if(!isDataFilled(title, place, date)) return false;
 				
@@ -91,24 +92,29 @@ public class NewCompetitionStage extends IStage
 				
 				while(true)
 				{
-					int refereeID = -1; // TODO Получить данные из БД
+					String fio = parser.getCell(row, 2).getStringCellValue();
+					String[] fioArr = fio.split(" ");
 					
-					String surname = parser.getCell(row, 2).getStringCellValue();
-					String name = parser.getCell(row, 3).getStringCellValue();
-					String patronymic = parser.getCell(row, 4).getStringCellValue();
-					if((surname + name + patronymic).equals("")) break;
+					if(fioArr.length < 3) break;
 					
-					RefereePosition refereePosition = RefereePosition.convertPositionTitle(parser.getCell(row, 5).getStringCellValue());
-					int points = (int) parser.getCell(row, 7).getNumericCellValue();
+					String surname = fioArr[0];
+					String name = fioArr[1];
+					String patronymic = fioArr[2];
+					
+					int refereeID = Referee.findRefereeID(surname, name, patronymic);
+					
+					RefereePosition refereePosition = RefereePosition.convertPositionTitle(parser.getCell(row, 3).getStringCellValue());
+					
+					int points = (int) parser.getCell(row, 5).getNumericCellValue();
 					
 					String carpet;
 					try
 					{
-						carpet = parser.getCell(row, 6).getStringCellValue();
+						carpet = parser.getCell(row, 4).getStringCellValue();
 					}
 					catch(IllegalStateException e)
 					{
-						carpet = Math.round(parser.getCell(row, 6).getNumericCellValue()) + "";
+						carpet = Math.round(parser.getCell(row, 4).getNumericCellValue()) + "";
 					}
 					
 					members.add(refereeID);

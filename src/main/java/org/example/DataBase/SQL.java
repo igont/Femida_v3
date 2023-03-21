@@ -127,7 +127,7 @@ public class SQL
 		table.init(competitionColumns);
 	}
 	
-	public String getGlobalRating()
+	public static String getGlobalRating()
 	{
 		ResultSet resultSet;
 		String result = "";

@@ -25,13 +25,13 @@ public class GlobalStage extends IStage // Стадия приветствия
 	{
 		init(list.size());
 	}
-
+	
 	@Override
 	public void action()
 	{
-
+	
 	}
-
+	
 	@Override
 	public PreValidationResponse preValidation(Answer answer)
 	{
@@ -42,16 +42,16 @@ public class GlobalStage extends IStage // Стадия приветствия
 		if(Objects.equals(answer.getMessage(), "/Register")) return new PreValidationResponse(NEXT_STAGE, 4);
 		if(Objects.equals(answer.getMessage(), "/PlanCompetition")) return new PreValidationResponse(NEXT_STAGE, 6);
 		if(Objects.equals(answer.getMessage(), "/Account")) return new PreValidationResponse(NEXT_STAGE, 7);
-
+		
 		if(answer.hasPhone())
 		{
 			Main.updateHandler.getActiveUser().phoneNumber = answer.getPhone();
 			return new PreValidationResponse(NEXT_STAGE, 5);
 		}
-
+		
 		return new PreValidationResponse(NOT_FOUND, -1);
 	}
-
+	
 	@Override
 	public void addValidators()
 	{
@@ -59,15 +59,15 @@ public class GlobalStage extends IStage // Стадия приветствия
 		{
 			String text = """
 					Добро пожаловать в систему учета рейтинга спортивных судей "FEMIDA".
-
+					
 					С помощью бота вы сможете выполнять следующие действия:
-
+					
 					➕*Зарегистрировать нового судью:*
 					/NewReferee
-
+					
 					➕*Создать новое соревнование:*
 					/NewCompetition
-
+					
 					📃*Вывести рейтинг всех судей:*
 					/GlobalRating
 									
@@ -80,14 +80,14 @@ public class GlobalStage extends IStage // Стадия приветствия
 					😐*Мой аккаунт*
 					/Account
 					""";
-
+			
 			TGSender.send(text);
 			return false;
 		});
-
+		
 		//NewReferee
 		validators.put(1, (Answer answer) -> true);
-
+		
 		// GlobalRating
 		validators.put(2, (Answer) ->
 		{
@@ -95,65 +95,72 @@ public class GlobalStage extends IStage // Стадия приветствия
 			TGSender.send("`Баллы | ФИО судьи\n------+-------------------\n" + rating + "`");
 			return false;
 		});
-
+		
 		//NewCompetition
 		validators.put(3, (Answer) -> true);
-
+		
 		//Register
 		validators.put(4, (Answer) ->
 		{
 			SendMessage sendMessage = new SendMessage();
 			sendMessage.setChatId(SafeUpdateParser.getChatID());
 			sendMessage.setText("Разрешите доступ к номеру телефона для автоматической регистрации (Конпка снизу)");
-
+			
 			ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
 			sendMessage.setReplyMarkup(replyKeyboardMarkup);
 			replyKeyboardMarkup.setResizeKeyboard(true);
 			replyKeyboardMarkup.setOneTimeKeyboard(true);
-
+			
 			List<KeyboardRow> keyboard = new ArrayList<>();
-
+			
 			KeyboardRow keyboardFirstRow = new KeyboardRow();
 			KeyboardButton keyboardButton = new KeyboardButton();
-
+			
 			keyboardButton.setText("Отправить номер");
 			keyboardButton.setRequestContact(true);
 			keyboardFirstRow.add(keyboardButton);
-
+			
 			keyboard.add(keyboardFirstRow);
 			replyKeyboardMarkup.setKeyboard(keyboard);
-
+			
 			TGSender.send(sendMessage);
 			return false;
 		});
-
+		
 		//Phone validation
 		validators.put(5, (Answer) ->
 		{
 			String phone = Main.updateHandler.getActiveUser().phoneNumber;
 			
-			phone = "8" + phone.substring(phone.length()-10);
+			phone = "8" + phone.substring(phone.length() - 10);
 			
 			TGSender.send("*Выполняем поиск по номеру:* " + phone);
 			
 			int id = Referee.findRefereeByPhone(phone);
-			Referee referee = new Referee(id);
 			
-			TGSender.send(referee.toNiceString());
+			if(id == -1)
+			{
+				TGSender.send("❗️️️️Не удалось найти рефери с таким номером");
+			}
+			else
+			{
+				Referee referee = new Referee(id);
+				TGSender.send(referee.toNiceString());
+			}
 			return false;
 		});
-
+		
 		validators.put(6, (Answer) ->
 		{
 			TGSender.send("❗️️️️Еще не доступно...");
 			return false;
 		});
-
+		
 		validators.put(7, (Answer) ->
 		{
 			TGSender.send("❗️️️️Еще не доступно...");
 			return false;
 		});
-
+		
 	}
 }
