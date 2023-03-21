@@ -70,9 +70,9 @@ public class NewCompetitionStage extends IStage
 					return false;
 				}
 				
-				String title = parser.readCell(6, 3).getStringCellValue();
-				String place = parser.readCell(7, 3).getStringCellValue();
-				Date date = parser.readCell(8, 3).getDateCellValue();
+				String title = parser.getCell(6, 3).getStringCellValue();
+				String place = parser.getCell(7, 3).getStringCellValue();
+				Date date = parser.getCell(8, 3).getDateCellValue();
 				
 				if(!isDataFilled(title, place, date)) return false;
 				
@@ -93,22 +93,22 @@ public class NewCompetitionStage extends IStage
 				{
 					int refereeID = -1; // TODO Получить данные из БД
 					
-					String surname = parser.readCell(row, 2).getStringCellValue();
-					String name = parser.readCell(row, 3).getStringCellValue();
-					String patronymic = parser.readCell(row, 4).getStringCellValue();
+					String surname = parser.getCell(row, 2).getStringCellValue();
+					String name = parser.getCell(row, 3).getStringCellValue();
+					String patronymic = parser.getCell(row, 4).getStringCellValue();
 					if((surname + name + patronymic).equals("")) break;
 					
-					RefereePosition refereePosition = RefereePosition.convertPositionTitle(parser.readCell(row, 5).getStringCellValue());
-					int points = (int) parser.readCell(row, 7).getNumericCellValue();
+					RefereePosition refereePosition = RefereePosition.convertPositionTitle(parser.getCell(row, 5).getStringCellValue());
+					int points = (int) parser.getCell(row, 7).getNumericCellValue();
 					
 					String carpet;
 					try
 					{
-						carpet = parser.readCell(row, 6).getStringCellValue();
+						carpet = parser.getCell(row, 6).getStringCellValue();
 					}
 					catch(IllegalStateException e)
 					{
-						carpet = Math.round(parser.readCell(row, 6).getNumericCellValue()) + "";
+						carpet = Math.round(parser.getCell(row, 6).getNumericCellValue()) + "";
 					}
 					
 					members.add(refereeID);
@@ -183,10 +183,10 @@ public class NewCompetitionStage extends IStage
 	
 	private static boolean isBookOriginal(ExcelParser parser)
 	{
-		if(!Objects.equals(parser.readCell(0, 1).getStringCellValue(), "Шаблон проведенного соревнования\n" + "Для использования в учетной " + "базе FEMIDA")) return false;
-		if(!Objects.equals(parser.readCell(11, 2).getStringCellValue(), "Фамилия")) return false;
-		if(!Objects.equals(parser.readCell(11, 7).getStringCellValue(), "Рейтинг")) return false;
-		if(!Objects.equals(parser.readCell(6, 2).getStringCellValue(), "Название соревнования:")) return false;
+		if(!Objects.equals(parser.getCell(0, 1).getStringCellValue(), "Шаблон проведенного соревнования\n" + "Для использования в учетной " + "базе FEMIDA")) return false;
+		if(!Objects.equals(parser.getCell(11, 2).getStringCellValue(), "Фамилия")) return false;
+		if(!Objects.equals(parser.getCell(11, 7).getStringCellValue(), "Рейтинг")) return false;
+		if(!Objects.equals(parser.getCell(6, 2).getStringCellValue(), "Название соревнования:")) return false;
 		
 		return true;
 	}

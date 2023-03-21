@@ -19,16 +19,16 @@ public class SQL
 	public static final String DB_URL = "jdbc:postgresql://localhost:5432/";
 	public static final String USER = "postgres";
 	public static final String PASSWORD = "postgres";
-
+	
 	public SQL()
 	{
 		initDriver();
-
+		
 		mainDatabase = new DataBase("postgres");
 		createRefereeTable();
 		createCompetitionTable();
 	}
-
+	
 	private static void initDriver()
 	{
 		System.out.println("Initialising PostgreSQL...");
@@ -41,11 +41,11 @@ public class SQL
 			throw new RuntimeException(e);
 		}
 	}
-
+	
 	private void createRefereeTable()
 	{
 		List<Column> refereeColumns = new ArrayList<>();
-
+		
 		refereeColumns.add(new Column("id", SMALLSERIAL));
 		refereeColumns.add(new Column("surname", TEXT));
 		refereeColumns.add(new Column("name", TEXT));
@@ -57,16 +57,16 @@ public class SQL
 		refereeColumns.add(new Column("birth", DATE));
 		refereeColumns.add(new Column("club_type", TEXT));
 		refereeColumns.add(new Column("club_name", TEXT));
-
+		
 		Table table = new Table("referee");
 		mainDatabase.addTable(table);
 		table.init(refereeColumns);
 	}
-
+	
 	public void addReferee(Referee referee)
 	{
 		List<Column> columns = mainDatabase.getTable("referee").getColumns();
-
+		
 		for(Column column : columns)
 		{
 			column.setData(switch(column.name())
@@ -83,18 +83,17 @@ public class SQL
 						default -> null;
 					});
 		}
-
+		
 		mainDatabase.getTable("referee").addLine(columns);
 	}
-
+	
 	public void addCompetition(Competition competition)
 	{
 		List<Column> columns = mainDatabase.getTable("competitions").getColumns();
-
+		
 		for(Column column : columns)
 		{
-			column.setData(
-					switch(column.name())
+			column.setData(switch(column.name())
 					{
 						case "title" -> competition.title();
 						case "place" -> competition.place();
@@ -106,14 +105,14 @@ public class SQL
 						default -> null;
 					});
 		}
-
+		
 		mainDatabase.getTable("competitions").addLine(columns);
 	}
-
+	
 	private void createCompetitionTable()
 	{
 		List<Column> competitionColumns = new ArrayList<>();
-
+		
 		competitionColumns.add(new Column("id", SMALLSERIAL));
 		competitionColumns.add(new Column("title", TEXT));
 		competitionColumns.add(new Column("place", TEXT));
@@ -122,11 +121,12 @@ public class SQL
 		competitionColumns.add(new Column("carpets", TEXT_ARRAY));
 		competitionColumns.add(new Column("grades", REAL_ARRAY));
 		competitionColumns.add(new Column("positions", TEXT_ARRAY));
-
+		
 		Table table = new Table("competitions");
 		mainDatabase.addTable(table);
 		table.init(competitionColumns);
 	}
+	
 	public String getGlobalRating()
 	{
 		ResultSet resultSet;
@@ -141,7 +141,8 @@ public class SQL
 				try
 				{
 					if(!resultSet.next()) break;
-				}catch(SQLException e)
+				}
+				catch(SQLException e)
 				{
 					throw new RuntimeException(e);
 				}
@@ -157,14 +158,16 @@ public class SQL
 				{
 					name = resultSet.getString("name").toUpperCase().charAt(0) + "";
 					
-				}catch(StringIndexOutOfBoundsException ignored)
+				}
+				catch(StringIndexOutOfBoundsException ignored)
 				{
 				}
 				try
 				{
 					patronymic = resultSet.getString("patronymic").toUpperCase().charAt(0) + "";
 					
-				}catch(StringIndexOutOfBoundsException ignored)
+				}
+				catch(StringIndexOutOfBoundsException ignored)
 				{
 				}
 				
@@ -176,13 +179,33 @@ public class SQL
 				
 				result += add;
 			}
-		}catch(SQLException e)
+		}
+		catch(SQLException e)
 		{
 			throw new RuntimeException(e);
 		}
 		return result;
 	}
-
+	
+	public static List<Referee> getAllReferees()
+	{
+		List<Referee> referees = new ArrayList<>();
+		ResultSet resultSet;
+		try
+		{
+			resultSet = Main.sql.mainDatabase.statement.executeQuery("Select id from referee order by calc_points desc;");
+			while(resultSet.next())
+			{
+				referees.add(new Referee(resultSet.getInt("id")));
+			}
+		}
+		catch(SQLException e)
+		{
+			throw new RuntimeException(e);
+		}
+		return referees;
+	}
+	
 	public static void execute(PreparedStatement preparedStatement)
 	{
 		try
@@ -194,12 +217,12 @@ public class SQL
 			throw new RuntimeException(e);
 		}
 	}
-
+	
 	public static boolean execute(String str, Statement statement) throws SQLException // Отправляем запрос, который ничего не возвращает
 	{
 		return statement.execute(str);
 	}
-
+	
 	public static ResultSet executeQuery(PreparedStatement preparedStatement)
 	{
 		try
@@ -211,7 +234,7 @@ public class SQL
 			throw new RuntimeException(e);
 		}
 	}
-
+	
 	public static ResultSet executeQuery(String str, Statement statement) throws SQLException // Отправляем запрос, который что-то возвращает
 	{
 		return statement.executeQuery(str);

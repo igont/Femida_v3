@@ -37,8 +37,6 @@ public class Referee
 			
 			resultSet = preparedStatement.executeQuery();
 			
-			System.out.println(preparedStatement);
-			
 			if(resultSet == null)
 			{
 				System.out.printf("❗️Referee not found id: [%s]\n", id);
@@ -159,7 +157,6 @@ public class Referee
 			
 			resultSet = preparedStatement.executeQuery();
 			
-			System.out.println(preparedStatement);
 			if(resultSet == null)
 			{
 				System.out.printf("❗️Referee not found phone: [%s]\n", phone);

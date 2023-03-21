@@ -12,15 +12,19 @@ import main.java.org.example.DataBase.SQL;
 import main.java.org.example.Main;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Date;
-import java.sql.Ref;
 import java.text.DecimalFormat;
 import java.util.*;
 
 import static main.java.org.example.Bot.Dialogue.Interfaces.ValidationResult.*;
+import static main.java.org.example.Bot.Files.ResourcesFiles.TEMPLATE_REFEREE;
 
 public class NewRefereeStage extends IStage
 {
@@ -34,10 +38,47 @@ public class NewRefereeStage extends IStage
 	{
 		TGSender.send("Скачайте шаблон, внесите необходимые данные и перешлите обратно:");
 		
+		writeReferees();
+		
 		TGSender sender = new TGSender();
-		File fileToSend = MyFiles.getFile(ResourcesFiles.TEMPLATE_REFEREE);
+		File fileToSend = MyFiles.getFile(TEMPLATE_REFEREE);
 		sender.setSendFile(fileToSend);
 		sender.sendPreparedMessage();
+	}
+	
+	private void writeReferees()
+	{
+		List<Referee> allReferees = SQL.getAllReferees();
+		XSSFWorkbook book;
+		
+		try
+		{
+			book = new XSSFWorkbook(new FileInputStream(MyFiles.getFile(TEMPLATE_REFEREE)));
+		}
+		catch(IOException e)
+		{
+			throw new RuntimeException(e);
+		}
+		
+		for(int i = 0; i < allReferees.size(); i++)
+		{
+			Referee currentReferee = allReferees.get(i);
+			XSSFSheet sheet = book.getSheetAt(1);
+			
+			sheet.createRow(i+3).createCell(1).setCellValue(currentReferee.getSurname());
+			sheet.getRow(i+3).createCell(2).setCellValue(currentReferee.getName());
+			sheet.getRow(i+3).createCell(3).setCellValue(currentReferee.getPatronymic());
+
+		}
+		try
+		{
+			book.write(new FileOutputStream(MyFiles.getFile(TEMPLATE_REFEREE)));
+			book.close();
+		}
+		catch(IOException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 	
 	@Override
@@ -78,9 +119,9 @@ public class NewRefereeStage extends IStage
 				{
 					Referee referee = new Referee();
 					
-					String surname = parser.readCell(row, 2).getStringCellValue();
-					String name = parser.readCell(row, 3).getStringCellValue();
-					String patronymic = parser.readCell(row, 4).getStringCellValue();
+					String surname = parser.getCell(row, 2).getStringCellValue();
+					String name = parser.getCell(row, 3).getStringCellValue();
+					String patronymic = parser.getCell(row, 4).getStringCellValue();
 					
 					if(Objects.equals(surname, ""))
 					{
@@ -111,19 +152,19 @@ public class NewRefereeStage extends IStage
 					}
 					
 					
-					referee.setBirth(new Date(parser.readCell(row, 5).getDateCellValue().getTime()));
-					referee.setCity(parser.readCell(row, 6).getStringCellValue());
-					referee.setClubType(parser.readCell(row, 8).getStringCellValue());
-					referee.setClubName(parser.readCell(row, 9).getStringCellValue());
+					referee.setBirth(new Date(parser.getCell(row, 5).getDateCellValue().getTime()));
+					referee.setCity(parser.getCell(row, 6).getStringCellValue());
+					referee.setClubType(parser.getCell(row, 8).getStringCellValue());
+					referee.setClubName(parser.getCell(row, 9).getStringCellValue());
 					
 					
 					try
 					{
-						referee.setCategory(parser.readCell(row, 7).getStringCellValue());
+						referee.setCategory(parser.getCell(row, 7).getStringCellValue());
 					}
 					catch(IllegalStateException e)
 					{
-						referee.setCategory(Math.round(parser.readCell(row, 7).getNumericCellValue()) + "");
+						referee.setCategory(Math.round(parser.getCell(row, 7).getNumericCellValue()) + "");
 					}
 					
 					
@@ -149,15 +190,15 @@ public class NewRefereeStage extends IStage
 	
 	private static int getLineNum(ExcelParser parser, int row)
 	{
-		if(parser.readCell(row, 1).getCellType() == CellType.NUMERIC)
+		if(parser.getCell(row, 1).getCellType() == CellType.NUMERIC)
 		{
-			return (int) parser.readCell(row, 1).getNumericCellValue();
+			return (int) parser.getCell(row, 1).getNumericCellValue();
 		}
-		else if(parser.readCell(row, 1).getCellType() == CellType.FORMULA)
+		else if(parser.getCell(row, 1).getCellType() == CellType.FORMULA)
 		{
-			if(parser.readCell(row, 1).getCachedFormulaResultType() == CellType.NUMERIC)
+			if(parser.getCell(row, 1).getCachedFormulaResultType() == CellType.NUMERIC)
 			{
-				return (int) parser.readCell(row, 1).getNumericCellValue();
+				return (int) parser.getCell(row, 1).getNumericCellValue();
 			}
 		}
 		return -1;
@@ -169,12 +210,12 @@ public class NewRefereeStage extends IStage
 		try
 		{
 			DecimalFormat decimalFormat = new DecimalFormat("#");
-			double phoneD = parser.readCell(row, col).getNumericCellValue();
+			double phoneD = parser.getCell(row, col).getNumericCellValue();
 			phone = decimalFormat.format(phoneD);
 		}
 		catch(IllegalStateException e)
 		{
-			phone = parser.readCell(row, col).getStringCellValue();
+			phone = parser.getCell(row, col).getStringCellValue();
 		}
 		phone = phone.replaceAll(" ", "");
 		phone = phone.replaceAll("\\(", "");
@@ -187,9 +228,9 @@ public class NewRefereeStage extends IStage
 	
 	private static boolean isBookOriginal(ExcelParser parser)
 	{
-		if(!Objects.equals(parser.readCell(0, 1).getStringCellValue(), "Шаблон регистрации нового судьи\n" + "Для использования в учетной базе FEMIDA")) return false;
-		if(!Objects.equals(parser.readCell(4, 1).getStringCellValue(), "№")) return false;
-		if(!Objects.equals(parser.readCell(4, 10).getStringCellValue(), "Номер телефона")) return false;
+		if(!Objects.equals(parser.getCell(0, 1).getStringCellValue(), "Шаблон регистрации нового судьи\n" + "Для использования в учетной базе FEMIDA")) return false;
+		if(!Objects.equals(parser.getCell(4, 1).getStringCellValue(), "№")) return false;
+		if(!Objects.equals(parser.getCell(4, 10).getStringCellValue(), "Номер телефона")) return false;
 		
 		return true;
 	}
