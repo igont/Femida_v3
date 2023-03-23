@@ -7,9 +7,9 @@ public enum Type
 	TEXT("TEXT"),
 	DATE("DATE"),
 	REAL("REAL"),
-	INTEGER_ARRAY("INTEGER ARRAY"),
-	TEXT_ARRAY("TEXT ARRAY"),
-	REAL_ARRAY("REAL ARRAY");
+	INTEGER_ARRAY("integer[]"),
+	TEXT_ARRAY("text[]"),
+	REAL_ARRAY("real[]");
 	//SMALLINT("SMALLINT"),
 	//BIGINT("BIGINT"),
 	//SERIAL("SERIAL"),

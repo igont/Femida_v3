@@ -40,7 +40,7 @@ public abstract class IDialogue
 			// Если не нашли, то проверяем глобальную стадию со старотвыми командами (стадия 0)
 			if(validateStage(preValidationResponse, stages.get(0), answer) == NOT_FOUND)
 			{
-				TGSender.send("Такой команды я не знаю");
+				TGSender.send("❗️️️️Такой команды я не знаю");
 			}
 		}
 	}

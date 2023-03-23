@@ -5,7 +5,6 @@ import main.java.org.example.Bot.Excel.Templates.Referee;
 import main.java.org.example.DataBase.Interfaces.Column;
 import main.java.org.example.DataBase.Interfaces.DataBase;
 import main.java.org.example.DataBase.Interfaces.Table;
-import main.java.org.example.Main;
 import org.apache.poi.util.StringUtil;
 
 import java.sql.*;
@@ -107,6 +106,7 @@ public class SQL
 		}
 		
 		mainDatabase.getTable("competitions").addLine(columns);
+		reCountAllGrades();
 	}
 	
 	private void createCompetitionTable()
@@ -127,14 +127,18 @@ public class SQL
 		table.init(competitionColumns);
 	}
 	
-	public static String getGlobalRating()
+	public String getGlobalRating()
 	{
+		reCountAllGrades();
 		ResultSet resultSet;
-		String result = "";
+		StringBuilder result = new StringBuilder();
+		
+		int counter = 0;
+		String lastPoints = "0";
+		
 		try
 		{
-			
-			resultSet = Main.sql.mainDatabase.statement.executeQuery("Select * from referee order by calc_points desc;");
+			resultSet = mainDatabase.statement.executeQuery("Select * from referee order by calc_points desc;");
 			
 			while(true)
 			{
@@ -146,54 +150,61 @@ public class SQL
 				{
 					throw new RuntimeException(e);
 				}
-				String points = "?";
-				String surname = "?";
-				String name = "?";
-				String patronymic = "?";
 				
-				points = resultSet.getInt("calc_points") + "";
-				surname = resultSet.getString("surname");
+				String points = resultSet.getInt("calc_points") + "";
 				
-				try
+				String surname = resultSet.getString("surname");
+				
+				if(!lastPoints.equals(points)) counter++; // Одинаковый рейтинг получает одинаковое место
+				lastPoints = points;
+				
+				switch(counter)
 				{
-					name = resultSet.getString("name").toUpperCase().charAt(0) + "";
-					
+					case 1 -> surname = "🥇" + surname;
+					case 2 -> surname = "🥈" + surname;
+					case 3 -> surname = "🥉" + surname;
+					default ->  surname = "  " + surname;
 				}
-				catch(StringIndexOutOfBoundsException ignored)
-				{
-				}
-				try
-				{
-					patronymic = resultSet.getString("patronymic").toUpperCase().charAt(0) + "";
-					
-				}
-				catch(StringIndexOutOfBoundsException ignored)
-				{
-				}
+				
+				String name = getFirstLetter(resultSet.getString("name").toUpperCase());
+				String patronymic = getFirstLetter(resultSet.getString("patronymic").toUpperCase());
 				
 				int spaces = 4 - points.length();
 				
 				String str = StringUtil.repeat((' '), spaces);
 				
-				String add = String.format("  %s| %s %s. %s.\n", points + str, surname, name, patronymic);
+				String add = String.format("  %s|%s %s. %s.\n", points + str, surname, name, patronymic);
 				
-				result += add;
+				result.append(add);
 			}
 		}
 		catch(SQLException e)
 		{
 			throw new RuntimeException(e);
 		}
-		return result;
+		return result.toString();
 	}
 	
-	public static List<Referee> getAllReferees()
+	private String getFirstLetter(String s)
+	{
+		try
+		{
+			return s.charAt(0) + "";
+		}
+		catch(StringIndexOutOfBoundsException ignored)
+		{
+		
+		}
+		return "";
+	}
+	
+	public List<Referee> getAllReferees()
 	{
 		List<Referee> referees = new ArrayList<>();
 		ResultSet resultSet;
 		try
 		{
-			resultSet = Main.sql.mainDatabase.statement.executeQuery("Select id from referee order by calc_points desc;");
+			resultSet = mainDatabase.statement.executeQuery("Select id from referee order by calc_points desc;");
 			while(resultSet.next())
 			{
 				referees.add(new Referee(resultSet.getInt("id")));
@@ -204,6 +215,87 @@ public class SQL
 			throw new RuntimeException(e);
 		}
 		return referees;
+	}
+	
+	public void reCountAllGrades()
+	{
+		String s = "select count(*) from referee";
+		try
+		{
+			ResultSet resultSet = mainDatabase.statement.executeQuery(s);
+			resultSet.next();
+			
+			int refereeAmount = resultSet.getInt("count");
+			
+			Deque<Float> countedGrades = new ArrayDeque<>(refereeAmount);
+			
+			while(refereeAmount > 0)
+			{
+				countedGrades.addFirst(getTotalGradeByID(refereeAmount));
+				refereeAmount--;
+			}
+			
+			changeCountedGrades(countedGrades);
+		}
+		catch(SQLException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+	
+	private void changeCountedGrades(Deque<Float> countedGrades) throws SQLException
+	{
+		int counter = 1;
+		while(!countedGrades.isEmpty())
+		{
+			Float points = countedGrades.removeFirst();
+			System.out.printf("id = %s  FIO = %s points = %s\n", counter, new Referee(counter).getFIO(), points);
+			
+			changeCountedGrade(counter, points);
+			counter++;
+		}
+	}
+	
+	private void changeCountedGrade(int id, float totalGrade) throws SQLException
+	{
+		String s = "update referee set calc_points = " + totalGrade + " where id = " + id;
+		mainDatabase.statement.execute(s);
+	}
+	
+	public float getTotalGradeByID(int id)
+	{
+		
+		float all = 0;
+		
+		all += getAll(id, 1); // Получаем оценку судьи за его первую должность в соревновании
+		all += getAll(id, 2); // Если он был сразу на нескольких должностях - то уже будет массив оценок. перебираем все варианты
+		all += getAll(id, 3);
+		all += getAll(id, 4);
+		all += getAll(id, 5); // 5 Должностей для человека - уже перебор, но всё может быть...
+		
+		return all;
+	}
+	
+	private float getAll(int id, int pos)
+	{
+		ResultSet resultSet;
+		int all = 0;
+		
+		try
+		{
+			String s = "select sum(grades[num[" + pos + "]]) from(select grades, array_positions(members," + id + ") as num from competitions) as uns;";
+			resultSet = mainDatabase.statement.executeQuery(s);
+			
+			while(resultSet.next())
+			{
+				all += resultSet.getDouble("sum");
+			}
+		}
+		catch(SQLException ignored)
+		{
+		}
+		
+		return all;
 	}
 	
 	public static void execute(PreparedStatement preparedStatement)

@@ -35,7 +35,7 @@ public class NewCompetitionStage extends IStage
 		TGSender.send("Скачайте шаблон, внесите необходимые данные и перешлите обратно:");
 		
 		TGSender sender = new TGSender();
-		File fileToSend = MyFiles.getFile(ResourcesFiles.TEMPLATE_COMPETITION);
+		File fileToSend = Main.excelStorage.getCompetitionBookFile();
 		sender.setSendFile(fileToSend);
 		sender.sendPreparedMessage();
 	}
@@ -53,7 +53,8 @@ public class NewCompetitionStage extends IStage
 	{
 		validators.put(stageNum, (Answer) ->
 		{
-			TGSender.send("Вы и так уже в процессе добавления нового соревнования, отправьте заполненный файл");
+			action();
+			//TGSender.send("Вы и так уже в процессе добавления нового соревнования, отправьте заполненный файл");
 			return false;
 		});
 		

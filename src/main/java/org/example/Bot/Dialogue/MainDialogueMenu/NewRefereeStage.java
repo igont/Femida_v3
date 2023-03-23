@@ -58,7 +58,9 @@ public class NewRefereeStage extends IStage
 	{
 		validators.put(stageNum, (Answer) ->
 		{
-			TGSender.send("Вы и так уже в процессе добавления нового судьи, отправьте заполненный файл");
+			action();
+			
+			//TGSender.send("Вы и так уже в процессе добавления нового судьи, отправьте заполненный файл");
 			return false;
 		});
 		validators.put(7, (Answer answer) ->
@@ -116,7 +118,13 @@ public class NewRefereeStage extends IStage
 					}
 					
 					
-					referee.setBirth(new Date(parser.getCell(row, 5).getDateCellValue().getTime()));
+					try
+					{
+						referee.setBirth(new Date(parser.getCell(row, 5).getDateCellValue().getTime()));
+					}
+					catch(NullPointerException ignored)
+					{
+					}
 					referee.setCity(parser.getCell(row, 6).getStringCellValue());
 					referee.setClubType(parser.getCell(row, 8).getStringCellValue());
 					referee.setClubName(parser.getCell(row, 9).getStringCellValue());
@@ -185,10 +193,13 @@ public class NewRefereeStage extends IStage
 		phone = phone.replaceAll("\\(", "");
 		phone = phone.replaceAll("\\)", "");
 		phone = phone.replaceAll("-", "");
+		
 		if(phone.length() > 10)
 		{
 			phone = phone.substring(phone.length() - 10);
 		}
+		
+		if(phone.equals("0")) return "";
 		
 		phone = "8" + phone;
 		return phone;

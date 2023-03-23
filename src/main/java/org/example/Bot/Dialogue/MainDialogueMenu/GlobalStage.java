@@ -39,9 +39,8 @@ public class GlobalStage extends IStage // Стадия приветствия
 		if(Objects.equals(answer.getMessage(), "/NewReferee")) return new PreValidationResponse(NEXT_STAGE, 1);
 		if(Objects.equals(answer.getMessage(), "/GlobalRating")) return new PreValidationResponse(NEXT_STAGE, 2);
 		if(Objects.equals(answer.getMessage(), "/NewCompetition")) return new PreValidationResponse(NEXT_STAGE, 3);
-		if(Objects.equals(answer.getMessage(), "/Register")) return new PreValidationResponse(NEXT_STAGE, 4);
+		if(Objects.equals(answer.getMessage(), "/Account")) return new PreValidationResponse(NEXT_STAGE, 4);
 		if(Objects.equals(answer.getMessage(), "/PlanCompetition")) return new PreValidationResponse(NEXT_STAGE, 6);
-		if(Objects.equals(answer.getMessage(), "/Account")) return new PreValidationResponse(NEXT_STAGE, 7);
 		
 		if(answer.hasPhone())
 		{
@@ -70,9 +69,6 @@ public class GlobalStage extends IStage // Стадия приветствия
 					
 					📃*Вывести рейтинг всех судей:*
 					/GlobalRating
-									
-					⬇️*Войти в систему:*
-					/Register
 					
 					🕐*Запланировать соревнование*
 					/PlanCompetition
@@ -102,28 +98,17 @@ public class GlobalStage extends IStage // Стадия приветствия
 		//Register
 		validators.put(4, (Answer) ->
 		{
-			SendMessage sendMessage = new SendMessage();
-			sendMessage.setChatId(SafeUpdateParser.getChatID());
-			sendMessage.setText("Разрешите доступ к номеру телефона для автоматической регистрации (Конпка снизу)");
+			if(Main.updateHandler.getActiveUser().femidaID == -1)
+			{
+				sendPhoneButton();
+			}
+			else
+			{
+				Referee referee = new Referee(Main.updateHandler.getActiveUser().femidaID);
+				TGSender.send(referee.toNiceString());
+			}
 			
-			ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-			sendMessage.setReplyMarkup(replyKeyboardMarkup);
-			replyKeyboardMarkup.setResizeKeyboard(true);
-			replyKeyboardMarkup.setOneTimeKeyboard(true);
 			
-			List<KeyboardRow> keyboard = new ArrayList<>();
-			
-			KeyboardRow keyboardFirstRow = new KeyboardRow();
-			KeyboardButton keyboardButton = new KeyboardButton();
-			
-			keyboardButton.setText("Отправить номер");
-			keyboardButton.setRequestContact(true);
-			keyboardFirstRow.add(keyboardButton);
-			
-			keyboard.add(keyboardFirstRow);
-			replyKeyboardMarkup.setKeyboard(keyboard);
-			
-			TGSender.send(sendMessage);
 			return false;
 		});
 		
@@ -147,6 +132,7 @@ public class GlobalStage extends IStage // Стадия приветствия
 				Referee referee = new Referee(id);
 				TGSender.send(referee.toNiceString());
 			}
+			Main.updateHandler.getActiveUser().femidaID = id;
 			return false;
 		});
 		
@@ -155,12 +141,31 @@ public class GlobalStage extends IStage // Стадия приветствия
 			TGSender.send("❗️️️️Еще не доступно...");
 			return false;
 		});
+	}
+	
+	private static void sendPhoneButton()
+	{
+		SendMessage sendMessage = new SendMessage();
+		sendMessage.setChatId(SafeUpdateParser.getChatID());
+		sendMessage.setText("Разрешите доступ к номеру телефона для автоматической регистрации (Конпка снизу)");
 		
-		validators.put(7, (Answer) ->
-		{
-			TGSender.send("❗️️️️Еще не доступно...");
-			return false;
-		});
+		ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+		sendMessage.setReplyMarkup(replyKeyboardMarkup);
+		replyKeyboardMarkup.setResizeKeyboard(true);
+		replyKeyboardMarkup.setOneTimeKeyboard(true);
 		
+		List<KeyboardRow> keyboard = new ArrayList<>();
+		
+		KeyboardRow keyboardFirstRow = new KeyboardRow();
+		KeyboardButton keyboardButton = new KeyboardButton();
+		
+		keyboardButton.setText("Отправить номер");
+		keyboardButton.setRequestContact(true);
+		keyboardFirstRow.add(keyboardButton);
+		
+		keyboard.add(keyboardFirstRow);
+		replyKeyboardMarkup.setKeyboard(keyboard);
+		
+		TGSender.send(sendMessage);
 	}
 }

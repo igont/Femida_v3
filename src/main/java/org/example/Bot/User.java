@@ -15,5 +15,7 @@ public class User
 	public User(String name)
 	{
 		this.name = name;
+		femidaID = -1;
+		phoneNumber = "";
 	}
 }

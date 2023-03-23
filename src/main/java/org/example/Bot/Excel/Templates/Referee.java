@@ -80,7 +80,7 @@ public class Referee
 		surname = "???";
 		name = "???";
 		patronymic = "???";
-		birth = new Date(new java.util.Date().getTime());
+		birth = null;
 		city = "???";
 		phone = "???";
 		refereeID = -1;
@@ -94,15 +94,18 @@ public class Referee
 	
 	public String toNiceString()
 	{
+		String birthS = birth + "";
+		if(birth == null) birthS = "???";
+		
 		String out = """
 				*Фамилия:* `%s`
 				*Имя:* `%s`
 				*Отчество:* `%s`
-		
+				
 				*Дата рождения:* `%s`
 				*Город:* `%s`
 				*Номер телефона:* `%s`
-		
+				
 				*Категория:* `%s`
 				*Клуб:* `%s`
 				
@@ -110,7 +113,7 @@ public class Referee
 				Эта информация видна только вам и
 				администратору`""";
 		
-		return String.format(out, surname, name, patronymic, birth, city, phone, category, clubType + " " + clubName);
+		return String.format(out, surname, name, patronymic, birthS, city, phone, category, clubType + " " + clubName);
 	}
 	
 	public static int findRefereeID(String surname, String name, String patronymic)
@@ -272,5 +275,10 @@ public class Referee
 	public String getName()
 	{
 		return name;
+	}
+	
+	public String getFIO()
+	{
+		return surname + " " + name + " " + patronymic;
 	}
 }

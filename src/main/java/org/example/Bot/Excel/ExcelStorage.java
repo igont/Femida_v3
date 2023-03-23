@@ -3,6 +3,7 @@ package main.java.org.example.Bot.Excel;
 import main.java.org.example.Bot.Excel.Templates.Referee;
 import main.java.org.example.Bot.Files.MyFiles;
 import main.java.org.example.DataBase.SQL;
+import main.java.org.example.Main;
 import org.apache.poi.EmptyFileException;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -16,6 +17,8 @@ public class ExcelStorage
 {
 	private XSSFWorkbook refereeBook;
 	private XSSFWorkbook competitionBook;
+	private boolean refereeListChanges;
+	
 	
 	public ExcelStorage()
 	{
@@ -40,8 +43,6 @@ public class ExcelStorage
 		refereeListChanged();
 	}
 	
-	private boolean refereeListChanges;
-	
 	public void refereeListChanged()
 	{
 		refereeListChanges = true;
@@ -49,16 +50,13 @@ public class ExcelStorage
 	
 	public void updateRefereesInFiles()
 	{
-		if(refereeListChanges)
-		{
-			clearRefereesData(MyFiles.getFile(TEMPLATE_COMPETITION));
-			clearRefereesData(MyFiles.getFile(TEMPLATE_REFEREE));
-			
-			writeRefereesData(MyFiles.getFile(TEMPLATE_COMPETITION));
-			writeRefereesData(MyFiles.getFile(TEMPLATE_REFEREE));
-			
-			refereeListChanges = false;
-		}
+		clearRefereesData(MyFiles.getFile(TEMPLATE_COMPETITION));
+		clearRefereesData(MyFiles.getFile(TEMPLATE_REFEREE));
+		
+		writeRefereesData(MyFiles.getFile(TEMPLATE_COMPETITION));
+		writeRefereesData(MyFiles.getFile(TEMPLATE_REFEREE));
+		
+		refereeListChanges = false;
 	}
 	
 	private void clearRefereesData(File bookFile)
@@ -78,7 +76,7 @@ public class ExcelStorage
 	
 	private void writeRefereesData(File bookFile)
 	{
-		List<Referee> allReferees = SQL.getAllReferees();
+		List<Referee> allReferees = Main.sql.getAllReferees();
 		XSSFWorkbook book = getBookFromFile(bookFile);
 		XSSFSheet sheet = book.getSheetAt(1);
 		

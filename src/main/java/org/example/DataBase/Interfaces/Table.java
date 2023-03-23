@@ -2,26 +2,27 @@ package main.java.org.example.DataBase.Interfaces;
 
 import main.java.org.example.DataBase.SQL;
 
-import java.sql.Array;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.reflect.Array;
+import java.util.Objects;
 
 public class Table
 {
 	private DataBase currentBase;
-
+	
 	private String name;
-
+	
 	private List<Column> columns = new ArrayList<>();
-
+	
 	public Table(String name)
 	{
 		this.name = name;
 	}
-
+	
 	public void drop()
 	{
 		try
@@ -33,12 +34,12 @@ public class Table
 			throw new RuntimeException(e);
 		}
 	}
-
+	
 	public void setDatabase(DataBase dataBase)
 	{
 		currentBase = dataBase;
 	}
-
+	
 	public void init(List<Column> columns)
 	{
 		this.columns = columns;
@@ -48,6 +49,7 @@ public class Table
 			s.append(column.name()).append(" ").append(column.type().getName()).append(", ");
 		}
 		String substring = s.substring(0, s.length() - 2) + ");";
+		System.out.println(substring);
 		try
 		{
 			SQL.execute(substring, currentBase.statement);
@@ -59,7 +61,7 @@ public class Table
 			System.out.println("Таблица " + name + " уже существует");
 		}
 	}
-
+	
 	public void addLine(List<Column> filledColumns)
 	{
 		String s = "insert into " + name + " (";
@@ -72,7 +74,7 @@ public class Table
 		}
 		s = s.substring(0, s.length() - 2);
 		s += ") values (";
-
+		
 		for(int i = 0; i < filledColumns.size(); i++)
 		{
 			if(filledColumns.get(i).data() != null)
@@ -81,13 +83,15 @@ public class Table
 			}
 		}
 		s = s.substring(0, s.length() - 2) + ");";
-
+		
+		System.out.println(s);
+		
 		PreparedStatement ps;
-
+		
 		try
 		{
 			ps = currentBase.connection.prepareStatement(s);
-
+			
 			int counter = 0;
 			for(Column column : filledColumns)
 			{
@@ -100,12 +104,13 @@ public class Table
 						case TEXT -> ps.setString(counter, (String) column.data());
 						case DATE -> ps.setDate(counter, (Date) column.data());
 						//case DATE -> ps.setDate(counter, new Date(((java.util.Date) column.data()).getTime()));
-						case INTEGER_ARRAY -> ps.setArray(counter, currentBase.connection.createArrayOf("integer", new Object[]{column.data()}));
-						case TEXT_ARRAY -> ps.setArray(counter, currentBase.connection.createArrayOf("text", new Object[]{column.data()}));
-						case REAL_ARRAY -> ps.setArray(counter, currentBase.connection.createArrayOf("float", new Object[]{column.data()}));
+						case INTEGER_ARRAY -> ps.setArray(counter, currentBase.connection.createArrayOf("integer", convertObjectToArray(column.data())));
+						case TEXT_ARRAY -> ps.setArray(counter, currentBase.connection.createArrayOf("text", convertObjectToArray(column.data())));
+						case REAL_ARRAY -> ps.setArray(counter, currentBase.connection.createArrayOf("float", convertObjectToArray(column.data())));
 					}
 				}
 			}
+			System.out.println(ps);
 			ps.execute();
 		}
 		catch(SQLException e)
@@ -113,12 +118,26 @@ public class Table
 			throw new RuntimeException(e);
 		}
 	}
-
+	
+	private static Object[] convertObjectToArray(Object o)
+	{
+		int length = Array.getLength(o);
+		Object[] res = new Object[length];
+		
+		for(int i = 0; i < length; i++)
+		{
+			Object obj = Array.get(o, i);
+			res[i] = obj;
+		}
+		
+		return res;
+	}
+	
 	public List<Column> getColumns()
 	{
 		return columns;
 	}
-
+	
 	public String getName()
 	{
 		return name;
