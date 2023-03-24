@@ -5,10 +5,13 @@ import main.java.org.example.Bot.Excel.Templates.Referee;
 import main.java.org.example.DataBase.Interfaces.Column;
 import main.java.org.example.DataBase.Interfaces.DataBase;
 import main.java.org.example.DataBase.Interfaces.Table;
+import main.java.org.example.Main;
 import org.apache.poi.util.StringUtil;
 
 import java.sql.*;
+import java.sql.Date;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static main.java.org.example.DataBase.Type.*;
 
@@ -18,12 +21,14 @@ public class SQL
 	public static final String DB_URL = "jdbc:postgresql://localhost:5432/";
 	public static final String USER = "postgres";
 	public static final String PASSWORD = "postgres";
+	private final Random random = new Random(123123123L);
+	
 	
 	public SQL()
 	{
 		initDriver();
-		
 		mainDatabase = new DataBase("postgres");
+		
 		createRefereeTable();
 		createCompetitionTable();
 	}
@@ -41,6 +46,15 @@ public class SQL
 		}
 	}
 	
+	public void addRandomlyData()
+	{
+		mainDatabase.getTable("referee").drop();
+		mainDatabase.getTable("competitions").drop();
+		
+		Stream.generate(Referee::getrandomReferee).limit(10).forEach(this::addReferee);
+		Stream.generate(Competition::getRandomCompetition).limit(10).forEach(this::addCompetition);
+	}
+	
 	private void createRefereeTable()
 	{
 		List<Column> refereeColumns = new ArrayList<>();
@@ -56,6 +70,7 @@ public class SQL
 		refereeColumns.add(new Column("birth", DATE));
 		refereeColumns.add(new Column("club_type", TEXT));
 		refereeColumns.add(new Column("club_name", TEXT));
+		refereeColumns.add(new Column("role", TEXT));
 		
 		Table table = new Table("referee");
 		mainDatabase.addTable(table);
@@ -79,6 +94,7 @@ public class SQL
 						case "birth" -> referee.getBirth();
 						case "club_type" -> referee.getClubType();
 						case "club_name" -> referee.getClubName();
+						case "role" -> referee.getRole().toString();
 						default -> null;
 					});
 		}
@@ -94,13 +110,13 @@ public class SQL
 		{
 			column.setData(switch(column.name())
 					{
-						case "title" -> competition.title();
-						case "place" -> competition.place();
-						case "date" -> competition.date();
-						case "members" -> competition.members();
-						case "carpets" -> competition.carpets();
-						case "grades" -> competition.grades();
-						case "positions" -> competition.positions();
+						case "title" -> competition.getTitle();
+						case "place" -> competition.getPlace();
+						case "date" -> competition.getDate();
+						case "members" -> competition.getMembers();
+						case "carpets" -> competition.getCarpets();
+						case "grades" -> competition.getGrades();
+						case "positions" -> competition.getPositions();
 						default -> null;
 					});
 		}
@@ -163,7 +179,7 @@ public class SQL
 					case 1 -> surname = "🥇" + surname;
 					case 2 -> surname = "🥈" + surname;
 					case 3 -> surname = "🥉" + surname;
-					default ->  surname = "  " + surname;
+					default -> surname = "  " + surname;
 				}
 				
 				String name = getFirstLetter(resultSet.getString("name").toUpperCase());
@@ -331,4 +347,10 @@ public class SQL
 	{
 		return statement.executeQuery(str);
 	}
+	
+	public static Date convertDate(java.util.Date date)
+	{
+		return new Date(date.getTime());
+	}
+	
 }

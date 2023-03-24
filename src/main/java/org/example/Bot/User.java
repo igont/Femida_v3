@@ -2,7 +2,8 @@ package main.java.org.example.Bot;
 
 import main.java.org.example.Bot.Dialogue.IDialogue;
 import main.java.org.example.Bot.Dialogue.MainDialogueMenu.MainDialogue;
-import org.telegram.telegrambots.meta.api.objects.Update;
+import main.java.org.example.Bot.Dialogue.Role;
+import main.java.org.example.Bot.Dialogue.Possibility;
 
 public class User
 {

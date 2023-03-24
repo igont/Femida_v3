@@ -1,5 +1,7 @@
 package main.java.org.example.Bot.Excel;
 
+import java.util.Random;
+
 public enum RefereePosition
 {
 	CHIEF_COMPETITION_REFEREE("Главный судья соревнований"),
@@ -28,5 +30,12 @@ public enum RefereePosition
 			case "Секретарь" -> SECRETARY;
 			default -> NONE;
 		};
+	}
+	
+	public static RefereePosition getRandomRefereePosition()
+	{
+		Random random = new Random();
+		int num = random.nextInt(1, RefereePosition.values().length);
+		return RefereePosition.values()[num];
 	}
 }

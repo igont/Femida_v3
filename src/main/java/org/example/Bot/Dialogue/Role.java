@@ -1,62 +1,36 @@
 package main.java.org.example.Bot.Dialogue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Role
 {
-	private boolean NEW_REFEREE;
-	private boolean NEW_COMPETITION;
-	private boolean PLAN_COMPETITION;
-	private boolean VERIFY_ACCOUNT;
+	private final Map<Possibility, Boolean> roles = new HashMap<>();
 	
-	public Role(Status status)
+	public Role()
 	{
-		switch(status)
-		{
-			case ADMIN ->
-			{
-				NEW_REFEREE = true;
-				NEW_COMPETITION = true;
-				PLAN_COMPETITION = true;
-				VERIFY_ACCOUNT = true;
-			}
-			case ACCOUNT_VERIFIER ->
-			{
-				NEW_REFEREE = false;
-				NEW_COMPETITION = false;
-				PLAN_COMPETITION = false;
-				VERIFY_ACCOUNT = true;
-			}
-			case VISITOR ->
-			{
-				NEW_REFEREE = false;
-				NEW_COMPETITION = false;
-				PLAN_COMPETITION = false;
-				VERIFY_ACCOUNT = false;
-			}
-		}
+		roles.put(Possibility.NEW_COMPETITION, false);
+		roles.put(Possibility.NEW_REFEREE, false);
+		roles.put(Possibility.VERIFY_ACCOUNT, false);
+		roles.put(Possibility.PLAN_COMPETITION, false);
 	}
 	
-	public boolean isNEW_REFEREE()
+	public void changeRole(Possibility possibility, boolean flag)
 	{
-		return NEW_REFEREE;
+		roles.put(possibility, flag);
 	}
 	
-	public boolean isNEW_COMPETITION()
+	public boolean getPossibility(Possibility possibility)
 	{
-		return NEW_COMPETITION;
+		return roles.get(possibility);
 	}
 	
-	public boolean isPLAN_COMPETITION()
+	@Override
+	public String toString()
 	{
-		return PLAN_COMPETITION;
-	}
-	
-	public boolean isVERIFY_ACCOUNT()
-	{
-		return VERIFY_ACCOUNT;
+		StringBuilder s = new StringBuilder();
+		roles.values().forEach(b -> s.append(b).append("|"));
+		return s.toString();
 	}
 }
 
-enum Status
-{
-	ADMIN, ACCOUNT_VERIFIER, VISITOR
-}

@@ -23,6 +23,8 @@ public class Table
 		this.name = name;
 	}
 	
+	private boolean tableDropped = true;
+	
 	public void drop()
 	{
 		try
@@ -33,6 +35,7 @@ public class Table
 		{
 			throw new RuntimeException(e);
 		}
+		tableDropped = true;
 	}
 	
 	public void setDatabase(DataBase dataBase)
@@ -49,7 +52,6 @@ public class Table
 			s.append(column.name()).append(" ").append(column.type().getName()).append(", ");
 		}
 		String substring = s.substring(0, s.length() - 2) + ");";
-		System.out.println(substring);
 		try
 		{
 			SQL.execute(substring, currentBase.statement);
@@ -60,10 +62,13 @@ public class Table
 			//e.printStackTrace();
 			System.out.println("Таблица " + name + " уже существует");
 		}
+		tableDropped = false;
 	}
 	
 	public void addLine(List<Column> filledColumns)
 	{
+		if(tableDropped) init(columns);
+		
 		String s = "insert into " + name + " (";
 		for(int i = 0; i < filledColumns.size(); i++)
 		{
@@ -83,8 +88,6 @@ public class Table
 			}
 		}
 		s = s.substring(0, s.length() - 2) + ");";
-		
-		System.out.println(s);
 		
 		PreparedStatement ps;
 		

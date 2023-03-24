@@ -1,5 +1,6 @@
 package main.java.org.example.Bot.Excel.Templates;
 
+import main.java.org.example.Bot.Dialogue.Role;
 import main.java.org.example.DataBase.Interfaces.Table;
 import main.java.org.example.Main;
 
@@ -8,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
+import java.util.List;
+import java.util.Random;
 
 import static com.itextpdf.text.pdf.XfaXpathConstructor.XdpPackage.Config;
 
@@ -23,7 +26,9 @@ public class Referee
 	private int refereeID;
 	private String clubType;
 	private String clubName;
+	private Role role;
 	
+
 	public Referee(int id)
 	{
 		Connection connection = Main.sql.mainDatabase.connection;
@@ -61,22 +66,9 @@ public class Referee
 		}
 	}
 	
-	public Referee(String surname, String name, String patronymic, Date birth, String city, String phone, String category, int refereeID, String clubType, String clubName)
-	{
-		this.surname = surname;
-		this.name = name;
-		this.patronymic = patronymic;
-		this.birth = birth;
-		this.city = city;
-		this.phone = phone;
-		this.category = category;
-		this.refereeID = refereeID;
-		this.clubType = clubType;
-		this.clubName = clubName;
-	}
-	
 	public Referee()
 	{
+		role = new Role();
 		surname = "???";
 		name = "???";
 		patronymic = "???";
@@ -86,6 +78,31 @@ public class Referee
 		refereeID = -1;
 	}
 	
+	public static Referee getrandomReferee()
+	{
+		List<String> surNames = List.of("Бишкеков", "Арбузов", "Архипов", "Осипов", "Белов", "Белоус", "Бондаренко", "Букин", "Волков", "Давыдов", "Духов", "Егоров", "Квасов");
+		List<String> names = List.of("Игорь", "Василий", "Петр", "Анатолий", "Антон", "Вячеслав", "Артем", "Виктор", "Павел", "Сергей", "Виталий", "Евгений", "Борис");
+		List<String> patronymics = List.of("Бебрович", "Ильич", "Николаевич", "Георгиевич", "Хасанович", "Дудкович", "Юрьевич", "Николаевич", "Константинович", "Вадимович", "Жмыхович");
+		
+		List<String> clubs = List.of("Дружный", "Богатырь", "Победитель", "Мордобой", "Недалекий", "Разливуха", "Неподкупный", "Синяк", "Перелом");
+		List<String> regions = List.of("Мухосранск", "Татарстан", "Москва", "Санкт-Петербург", "Челябинск", "Оренбург", "Новосибирск", "Московская область", "Калининград", "Ленинградская область", "Кемеровская область");
+		
+		Referee referee = new Referee();
+		referee.setSurname(getRandomValue(surNames));
+		referee.setName(getRandomValue(names));
+		referee.setPatronymic(getRandomValue(patronymics));
+		
+		referee.setClubType("СК");
+		referee.setClubName(getRandomValue(clubs));
+		referee.setCity(getRandomValue(regions));
+		
+		return referee;
+	}
+	private static <T> T getRandomValue(List<T> list)
+	{
+		Random random = new Random();
+		return list.get(random.nextInt(list.size()));
+	}
 	@Override
 	public String toString()
 	{
@@ -207,11 +224,6 @@ public class Referee
 		this.phone = phone;
 	}
 	
-	public void setRefereeID(int refereeID)
-	{
-		this.refereeID = refereeID;
-	}
-	
 	public void setCategory(String category)
 	{
 		this.category = category;
@@ -280,5 +292,15 @@ public class Referee
 	public String getFIO()
 	{
 		return surname + " " + name + " " + patronymic;
+	}
+	
+	public Role getRole()
+	{
+		return role;
+	}
+	
+	public void setRole(Role role)
+	{
+		this.role = role;
 	}
 }
