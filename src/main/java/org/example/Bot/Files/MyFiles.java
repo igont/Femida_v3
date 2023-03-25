@@ -21,16 +21,15 @@ public class MyFiles
 	{
 		String className = Main.class.getName().replace('.', '/');
 		String classJar = Main.class.getResource("/" + className + ".class").toString();
-		//System.out.println("classJar: " + classJar);
-		//System.out.println("className: " + className);
+
 		String path = "";
 		
 		String[] split = classJar.split("/");
 		for(int i = 1; i < split.length; i++)
 		{
-			if(Objects.equals(split[i], "Femida_v3.jar!")) break;
+			if(Objects.equals(split[i], "Femida.jar!")) break;
 			path += split[i] + "/";
-			if(Objects.equals(split[i], "Femida_v3")) break;
+			//if(Objects.equals(split[i], "Femida")) break;
 		}
 		
 		if(path.startsWith("home"))
@@ -42,8 +41,8 @@ public class MyFiles
 		TEMP_ROOT = RESOURCES_ROOT + "Temp/";
 		SOURCES_ROOT = RESOURCES_ROOT + "Sources/";
 		
-		//System.out.println("RESOURCES_ROOT" + RESOURCES_ROOT);
-		//System.out.println();
+		System.out.println("RESOURCES_ROOT: " + RESOURCES_ROOT);
+		System.out.println();
 	}
 	
 	public static File getFile(ResourcesFiles type)

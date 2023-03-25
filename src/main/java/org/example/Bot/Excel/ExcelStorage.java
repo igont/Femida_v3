@@ -33,8 +33,8 @@ public class ExcelStorage
 		}
 		catch(EmptyFileException e)
 		{
-			MyFiles.copyTo(TEMPLATE_COMPETITION_ORIGINAL, TEMPLATE_COMPETITION);
-			MyFiles.copyTo(TEMPLATE_REFEREE_ORIGINAL, TEMPLATE_REFEREE);
+			MyFiles.saveTo(MyFiles.getFile(TEMPLATE_COMPETITION_ORIGINAL), MyFiles.getResourcesPath());
+			MyFiles.saveTo(MyFiles.getFile(TEMPLATE_REFEREE_ORIGINAL), MyFiles.getResourcesPath());
 		}
 		
 		save(refereeBook, MyFiles.getFile(TEMPLATE_REFEREE));

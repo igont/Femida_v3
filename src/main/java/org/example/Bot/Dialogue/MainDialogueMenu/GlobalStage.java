@@ -1,7 +1,10 @@
 package main.java.org.example.Bot.Dialogue.MainDialogueMenu;
 
 import main.java.org.example.Bot.Dialogue.Interfaces.PreValidationResponse;
+import main.java.org.example.Bot.Dialogue.Possibility;
+import main.java.org.example.Bot.Dialogue.Role;
 import main.java.org.example.Bot.Excel.Templates.Referee;
+import main.java.org.example.DataBase.SQL;
 import main.java.org.example.Main;
 import main.java.org.example.Bot.Dialogue.Answer;
 import main.java.org.example.Bot.Dialogue.IStage;
@@ -35,7 +38,9 @@ public class GlobalStage extends IStage // Стадия приветствия
 	@Override
 	public PreValidationResponse preValidation(Answer answer)
 	{
+		if(Objects.equals(answer.getMessage(), "/commands")) return new PreValidationResponse(FORCE_REPEAT, 0);
 		if(Objects.equals(answer.getMessage(), "/start")) return new PreValidationResponse(FORCE_REPEAT, 0);
+		
 		if(Objects.equals(answer.getMessage(), "/NewReferee")) return new PreValidationResponse(NEXT_STAGE, 1);
 		if(Objects.equals(answer.getMessage(), "/GlobalRating")) return new PreValidationResponse(NEXT_STAGE, 2);
 		if(Objects.equals(answer.getMessage(), "/NewCompetition")) return new PreValidationResponse(NEXT_STAGE, 3);
@@ -56,28 +61,85 @@ public class GlobalStage extends IStage // Стадия приветствия
 	{
 		validators.put(0, (Answer) ->
 		{
-			String text = """
-					Добро пожаловать в систему учета рейтинга спортивных судей "FEMIDA".
-					
-					С помощью бота вы сможете выполнять следующие действия:
-					
+			int id = Main.updateHandler.getActiveUser().femidaID;
+			Referee referee = new Referee(id);
+			
+			String head = "";
+			if(id == -1)
+			{
+				if(!Objects.equals(Main.updateHandler.getActiveUser().phoneNumber, ""))
+				{
+					head = """
+						Аккаунта с вашим номером телефона нет в списках судей.
+						
+						Для вас доступны стандартные действия:
+						
+						""";
+				}
+				else
+				{
+					head = """
+						Для получения полного списка команд перейдите в ваш /Account, затем вновь вызовите список команд /commands из Меню.
+						
+						Пока для вас доступны базовые действия:
+						
+						""";
+				}
+			}else
+			{
+				head = referee.getFIO() + ", Вам доступны следующие команды:\n\n";
+			}
+			
+			
+			String newReferee = """
 					➕*Зарегистрировать нового судью:*
 					/NewReferee
 					
+					""";
+			
+			String newCompetition = """
 					➕*Создать новое соревнование:*
 					/NewCompetition
 					
-					📃*Вывести рейтинг всех судей:*
+					""";
+			
+			String globalRating = """
+					📃*Показать рейтинг судей:*
 					/GlobalRating
 					
+					""";
+			
+			String planCompetition = """
 					🕐*Запланировать соревнование*
 					/PlanCompetition
 					
-					😐*Мой аккаунт*
-					/Account
 					""";
 			
-			TGSender.send(text);
+			String account = """
+					😐*Мой аккаунт*
+					/Account
+					
+					""";
+			
+			String admin = """
+					*Получить список админских команд*
+					/getAdminPanel
+					""";
+			
+			String commands = head;
+			
+			if(id != -1)
+			{
+				Role role = referee.getRole();
+				
+				if(role.getPossibility(Possibility.NEW_REFEREE)) commands += newReferee;
+				if(role.getPossibility(Possibility.NEW_COMPETITION)) commands += newCompetition;
+				if(role.getPossibility(Possibility.PLAN_COMPETITION)) commands += planCompetition;
+				if(role.getPossibility(Possibility.ADMIN)) commands += admin;
+			}
+			
+			commands += globalRating + account;
+			TGSender.send(commands);
 			return false;
 		});
 		
@@ -116,6 +178,7 @@ public class GlobalStage extends IStage // Стадия приветствия
 		validators.put(5, (Answer) ->
 		{
 			String phone = Main.updateHandler.getActiveUser().phoneNumber;
+			//phone = new Referee(1).getPhone();
 			
 			phone = "8" + phone.substring(phone.length() - 10);
 			

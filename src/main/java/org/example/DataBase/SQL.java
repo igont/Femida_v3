@@ -5,7 +5,6 @@ import main.java.org.example.Bot.Excel.Templates.Referee;
 import main.java.org.example.DataBase.Interfaces.Column;
 import main.java.org.example.DataBase.Interfaces.DataBase;
 import main.java.org.example.DataBase.Interfaces.Table;
-import main.java.org.example.Main;
 import org.apache.poi.util.StringUtil;
 
 import java.sql.*;
@@ -51,7 +50,7 @@ public class SQL
 		mainDatabase.getTable("referee").drop();
 		mainDatabase.getTable("competitions").drop();
 		
-		Stream.generate(Referee::getrandomReferee).limit(10).forEach(this::addReferee);
+		Stream.generate(Referee::getRandomReferee).limit(10).forEach(this::addReferee);
 		Stream.generate(Competition::getRandomCompetition).limit(10).forEach(this::addCompetition);
 	}
 	

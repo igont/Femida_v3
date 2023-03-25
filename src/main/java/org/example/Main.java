@@ -20,7 +20,7 @@ public class Main
 	public static void main(String[] args)
 	{
 		startBot();
-		sql.addRandomlyData();
+		//sql.addRandomlyData();
 	}
 
 	private static String startBot()

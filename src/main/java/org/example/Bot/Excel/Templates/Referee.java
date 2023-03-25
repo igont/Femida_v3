@@ -1,7 +1,7 @@
 package main.java.org.example.Bot.Excel.Templates;
 
+import main.java.org.example.Bot.Dialogue.Possibility;
 import main.java.org.example.Bot.Dialogue.Role;
-import main.java.org.example.DataBase.Interfaces.Table;
 import main.java.org.example.Main;
 
 import java.sql.Connection;
@@ -10,9 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
-
-import static com.itextpdf.text.pdf.XfaXpathConstructor.XdpPackage.Config;
+import java.util.Set;
 
 public class Referee
 {
@@ -28,7 +28,7 @@ public class Referee
 	private String clubName;
 	private Role role;
 	
-
+	
 	public Referee(int id)
 	{
 		Connection connection = Main.sql.mainDatabase.connection;
@@ -44,7 +44,7 @@ public class Referee
 			
 			if(resultSet == null)
 			{
-				System.out.printf("❗️Referee not found id: [%s]\n", id);
+				//System.out.printf("❗️Referee not found id: [%s]\n", id);
 			}
 			else if(resultSet.next())
 			{
@@ -57,6 +57,7 @@ public class Referee
 				category = resultSet.getString("category");
 				clubType = resultSet.getString("club_type");
 				clubName = resultSet.getString("club_name");
+				role = new Role(resultSet.getString("role"));
 				refereeID = id;
 			}
 		}
@@ -69,16 +70,16 @@ public class Referee
 	public Referee()
 	{
 		role = new Role();
-		surname = "???";
-		name = "???";
-		patronymic = "???";
+		surname = "";
+		name = "";
+		patronymic = "";
 		birth = null;
-		city = "???";
-		phone = "???";
+		city = "";
+		phone = "";
 		refereeID = -1;
+		category = "";
 	}
-	
-	public static Referee getrandomReferee()
+	public static Referee getRandomReferee()
 	{
 		List<String> surNames = List.of("Бишкеков", "Арбузов", "Архипов", "Осипов", "Белов", "Белоус", "Бондаренко", "Букин", "Волков", "Давыдов", "Духов", "Егоров", "Квасов");
 		List<String> names = List.of("Игорь", "Василий", "Петр", "Анатолий", "Антон", "Вячеслав", "Артем", "Виктор", "Павел", "Сергей", "Виталий", "Евгений", "Борис");
@@ -95,14 +96,31 @@ public class Referee
 		referee.setClubType("СК");
 		referee.setClubName(getRandomValue(clubs));
 		referee.setCity(getRandomValue(regions));
+		referee.role = Role.getRandomRole();
+		referee.phone = randomPhone();
 		
 		return referee;
 	}
+	
+	private static String randomPhone()
+	{
+		StringBuilder s = new StringBuilder();
+		Random rand = new Random();
+		
+		s.append(8);
+		s.append(rand.nextInt(900) + 100);
+		s.append(rand.nextInt(900) + 100);
+		s.append(rand.nextInt(9000) + 1000);
+		
+		return s.toString();
+	}
+	
 	private static <T> T getRandomValue(List<T> list)
 	{
 		Random random = new Random();
 		return list.get(random.nextInt(list.size()));
 	}
+	
 	@Override
 	public String toString()
 	{
@@ -124,13 +142,34 @@ public class Referee
 				*Номер телефона:* `%s`
 				
 				*Категория:* `%s`
-				*Клуб:* `%s`
-				
+				*Клуб:* `%s`""";
+		
+		String possibilities = """
+				\n\n*Доступные команды:*
+				`%s`
+				""";
+		
+		String disclaimer = """
 				`---------------------------------
 				Эта информация видна только вам и
 				администратору`""";
 		
-		return String.format(out, surname, name, patronymic, birthS, city, phone, category, clubType + " " + clubName);
+		out = String.format(out, surname, name, patronymic, birthS, city, phone, category, clubType + " " + clubName);
+		
+		Set<Map.Entry<Possibility, Boolean>> entries = role.getCopyOfPossibilities().entrySet();
+		if(entries.size() != 0)
+		{
+			StringBuilder b = new StringBuilder();
+			entries.stream().filter(Map.Entry::getValue).forEach(v -> b.append(v.getKey()).append("\n"));
+			
+			possibilities = String.format(possibilities, b);
+		}
+		else
+		{
+			possibilities = "\n\n";
+		}
+		
+		return out + possibilities + disclaimer;
 	}
 	
 	public static int findRefereeID(String surname, String name, String patronymic)

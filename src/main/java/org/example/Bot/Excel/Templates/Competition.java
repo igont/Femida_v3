@@ -129,7 +129,7 @@ public final class Competition
 		for(int i = 0; i < ids.size(); i++)
 		{
 			idArr[i] = ids.get(i);
-			pointsArr[i] = random.nextInt(1, 10);
+			pointsArr[i] = random.nextInt(1, 11);
 			refPosArr[i] = RefereePosition.getRandomRefereePosition();
 		}
 		competition.setMembers(idArr);
