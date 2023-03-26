@@ -2,7 +2,6 @@ package main.java.org.example.Bot.Excel.Templates;
 
 import main.java.org.example.Bot.Excel.RefereePosition;
 import main.java.org.example.DataBase.SQL;
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.*;
 import java.util.stream.Collectors;

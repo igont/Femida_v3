@@ -55,12 +55,12 @@ public class Table
 		try
 		{
 			SQL.execute(substring, currentBase.statement);
-			System.out.println("Таблица " + name + " создана");
+			System.out.println("✅Table has been created: " + name);
 		}
 		catch(SQLException e)
 		{
 			//e.printStackTrace();
-			System.out.println("Таблица " + name + " уже существует");
+			System.out.println("✅Table already exists: " + name);
 		}
 		tableDropped = false;
 	}

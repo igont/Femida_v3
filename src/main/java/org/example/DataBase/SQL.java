@@ -25,7 +25,10 @@ public class SQL
 	
 	public SQL()
 	{
+		System.out.println();
+		System.out.println("Launching PostgreSQL...");
 		initDriver();
+		
 		mainDatabase = new DataBase("postgres");
 		
 		createRefereeTable();
@@ -34,7 +37,6 @@ public class SQL
 	
 	private static void initDriver()
 	{
-		System.out.println("Initialising PostgreSQL...");
 		try
 		{
 			Class.forName("org.postgresql.Driver");

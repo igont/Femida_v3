@@ -20,13 +20,14 @@ public class DataBase
 	public DataBase(String name)
 	{
 		tables = new HashMap<>();
-
-		System.out.println("Connecting to Database: " + name);
+		
+		System.out.println("Connecting to Database: " + name + "...");
+		System.out.println();
 		this.name = name;
 		try
 		{
 			logIn(name, USER, PASSWORD);
-			System.out.println("Connected to database: " + name);
+			System.out.println("✅Connected to database: " + name);
 		}
 		catch(SQLException e)
 		{
@@ -39,8 +40,6 @@ public class DataBase
 				try
 				{
 					SQL.execute("create user " + USER + " with encrypted password '" + PASSWORD + "';", statement);
-					SQL.execute("grant usage on schema public to " + USER, statement);
-					SQL.execute("grant create on schema public to " + USER, statement);
 				}
 				catch(SQLException exc)
 				{
@@ -52,7 +51,7 @@ public class DataBase
 				System.out.println("Захожу через нормального пользователя в эту базу данных");
 				logIn(name, USER, PASSWORD);
 
-				System.out.println("Connected to database: " + name);
+				System.out.println("✅Connected to database: " + name);
 			}
 			catch(SQLException ex)
 			{

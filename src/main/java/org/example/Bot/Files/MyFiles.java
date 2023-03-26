@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
@@ -19,30 +20,13 @@ public class MyFiles
 	
 	static
 	{
-		String className = Main.class.getName().replace('.', '/');
-		String classJar = Main.class.getResource("/" + className + ".class").toString();
-
-		String path = "";
+		String origin = new File("").getAbsolutePath() + "/";
 		
-		String[] split = classJar.split("/");
-		for(int i = 1; i < split.length; i++)
-		{
-			if(Objects.equals(split[i], "Femida.jar!")) break;
-			path += split[i] + "/";
-			//if(Objects.equals(split[i], "Femida")) break;
-		}
-		
-		if(path.startsWith("home"))
-		{
-			path = "/" + path;
-		}
-		
-		RESOURCES_ROOT = path + "Resources/";
+		RESOURCES_ROOT = origin + "Resources/";
 		TEMP_ROOT = RESOURCES_ROOT + "Temp/";
 		SOURCES_ROOT = RESOURCES_ROOT + "Sources/";
 		
 		System.out.println("RESOURCES_ROOT: " + RESOURCES_ROOT);
-		System.out.println();
 	}
 	
 	public static File getFile(ResourcesFiles type)

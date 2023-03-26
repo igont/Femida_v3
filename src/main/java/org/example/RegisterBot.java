@@ -4,18 +4,24 @@ import main.java.org.example.Bot.TG.SafeUpdateParser;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-public class BotStarter extends TelegramLongPollingBot
+public class RegisterBot extends TelegramLongPollingBot
 {
+	private String token;
+	public RegisterBot(String token)
+	{
+		this.token = token;
+	}
+	
 	@Override
 	public String getBotUsername()
 	{
-		return System.getenv("BOT_NAME");
+		return "FEMIDA";
 	}
 
 	@Override
 	public String getBotToken()
 	{
-		return System.getenv("BOT_TOKEN");
+		return token;
 	}
 
 	@Override
