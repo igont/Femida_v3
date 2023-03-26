@@ -32,7 +32,6 @@ public class GlobalStage extends IStage // Стадия приветствия
 	@Override
 	public void action()
 	{
-	
 	}
 	
 	@Override
@@ -46,6 +45,7 @@ public class GlobalStage extends IStage // Стадия приветствия
 		if(Objects.equals(answer.getMessage(), "/NewCompetition")) return new PreValidationResponse(NEXT_STAGE, 3);
 		if(Objects.equals(answer.getMessage(), "/Account")) return new PreValidationResponse(NEXT_STAGE, 4);
 		if(Objects.equals(answer.getMessage(), "/PlanCompetition")) return new PreValidationResponse(NEXT_STAGE, 6);
+		if(Objects.equals(answer.getMessage(), "/Register")) return new PreValidationResponse(NEXT_STAGE, 7);
 		
 		if(answer.hasPhone())
 		{
@@ -188,7 +188,7 @@ public class GlobalStage extends IStage // Стадия приветствия
 			
 			if(id == -1)
 			{
-				TGSender.send("❗️️️️Не удалось найти рефери с таким номером");
+				TGSender.send("❗️️️️Не удалось найти рефери с таким номером\nМожете отправить заявку на создание учетной записи /Register");
 			}
 			else
 			{
@@ -204,6 +204,7 @@ public class GlobalStage extends IStage // Стадия приветствия
 			TGSender.send("❗️️️️Еще не доступно...");
 			return false;
 		});
+		validators.put(7, (Answer) ->true);
 	}
 	
 	private static void sendPhoneButton()

@@ -54,7 +54,6 @@ public class NewCompetitionStage extends IStage
 		validators.put(stageNum, (Answer) ->
 		{
 			action();
-			//TGSender.send("Вы и так уже в процессе добавления нового соревнования, отправьте заполненный файл");
 			return false;
 		});
 		
