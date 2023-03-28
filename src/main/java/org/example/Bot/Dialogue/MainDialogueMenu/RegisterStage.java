@@ -2,7 +2,6 @@ package main.java.org.example.Bot.Dialogue.MainDialogueMenu;
 
 import main.java.org.example.Bot.Dialogue.Answer;
 import main.java.org.example.Bot.Dialogue.IStage;
-import main.java.org.example.Bot.Dialogue.Interfaces.PreValidationResponse;
 import main.java.org.example.Bot.Dialogue.Interfaces.ValidationResult;
 import main.java.org.example.Bot.Excel.Templates.Referee;
 import main.java.org.example.Bot.TG.TGSender;
@@ -15,9 +14,9 @@ import java.util.*;
 
 public class RegisterStage extends IStage
 {
-	public RegisterStage(Map<String, IStage> stages)
+	public RegisterStage(String name)
 	{
-		init(stages.size() + "");
+		super(name);
 	}
 	
 	private String subStage = "get surname";
@@ -32,25 +31,21 @@ public class RegisterStage extends IStage
 	}
 	
 	@Override
-	public PreValidationResponse preValidation(Answer answer)
+	public String preValidation(Answer answer)
 	{
-		if(Objects.equals(answer.getMessage(), "/Cancel"))
-		{
-			return new PreValidationResponse(ValidationResult.NEXT_STAGE, "0");
-		}
-		if(answer.getMessage().startsWith("/")) return new PreValidationResponse(ValidationResult.NEXT_STAGE, "-1");
-		return new PreValidationResponse(ValidationResult.NEXT_STAGE, subStage + "");
+		if(Objects.equals(answer.getMessage(), "/Cancel")) return "cancel";
+		if(answer.getMessage().startsWith("/")) return null;
+		return subStage;
 	}
 	
 	@Override
 	public void addValidators()
 	{
-		validators.put("0", (answer) ->
+		validators.put("cancel", (answer) ->
 		{
 			TGSender.send("✅Регистрация аккаунта отменена");
 			return true;
 		});
-		
 		validators.put("get surname", (answer) ->
 		{
 			referee.setSurname(answer.getMessage());
@@ -100,7 +95,7 @@ public class RegisterStage extends IStage
 			int month = Integer.parseInt(split[1]);
 			int year = Integer.parseInt(split[2]);
 			
-			calendar.set(year,month,day);
+			calendar.set(year, month, day);
 			TGSender.send(day + "." + month + "." + year);
 			TGSender.send("Дата рождения установлена: " + calendar.get(Calendar.DAY_OF_MONTH) + "." + calendar.get(Calendar.MONTH) + "." + calendar.get(Calendar.YEAR));
 			return false;

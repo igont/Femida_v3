@@ -1,6 +1,5 @@
 package main.java.org.example.Bot.Dialogue.MainDialogueMenu;
 
-import main.java.org.example.Bot.Dialogue.Interfaces.PreValidationResponse;
 import main.java.org.example.Bot.Dialogue.Possibility;
 import main.java.org.example.Bot.Dialogue.Role;
 import main.java.org.example.Bot.Excel.Templates.Referee;
@@ -25,9 +24,9 @@ import static main.java.org.example.Bot.Dialogue.Interfaces.ValidationResult.*;
 
 public class GlobalStage extends IStage // Стадия приветствия
 {
-	public GlobalStage(Map<String, IStage> stages)
+	public GlobalStage(String stageName)
 	{
-		init(stages.size() + "");
+		super(stageName);
 	}
 	
 	@Override
@@ -36,25 +35,35 @@ public class GlobalStage extends IStage // Стадия приветствия
 	}
 	
 	@Override
-	public PreValidationResponse preValidation(Answer answer)
+	public String preValidation(Answer answer)
 	{
-		if(Objects.equals(answer.getMessage(), "/commands")) return new PreValidationResponse(FORCE_REPEAT, "0");
-		if(Objects.equals(answer.getMessage(), "/start")) return new PreValidationResponse(FORCE_REPEAT, "0");
-		if(Objects.equals(answer.getMessage(), "/NewReferee")) return new PreValidationResponse(NEXT_STAGE, "new referee");
-		if(Objects.equals(answer.getMessage(), "/GlobalRating")) return new PreValidationResponse(NEXT_STAGE, "global rating");
-		if(Objects.equals(answer.getMessage(), "/NewCompetition")) return new PreValidationResponse(NEXT_STAGE, "new competition");
-		if(Objects.equals(answer.getMessage(), "/Account")) return new PreValidationResponse(NEXT_STAGE, "account");
-		if(Objects.equals(answer.getMessage(), "/PlanCompetition")) return new PreValidationResponse(NEXT_STAGE, "plan competition");
-		if(Objects.equals(answer.getMessage(), "/Register")) return new PreValidationResponse(NEXT_STAGE, "register");
-		if(Objects.equals(answer.getMessage(), "/About")) return new PreValidationResponse(NEXT_STAGE, "about");
+		String messageText = answer.getMessage();
+		String nextStageName = "";
+		
+		if(answer.hasMessage())
+		{
+			nextStageName = switch(messageText)
+					{
+						case "/commands", "/start" -> "send commands";
+						case "/NewReferee" -> "new referee";
+						case "/GlobalRating" -> "global rating";
+						case "/NewCompetition" -> "new competition";
+						case "/Account" -> "account";
+						case "/PlanCompetition" -> "plan competition";
+						case "/Register" -> "register";
+						case "/About" -> "about";
+						default -> "";
+					};
+		}
 		
 		if(answer.hasPhone())
 		{
 			Main.updateHandler.getActiveUser().phoneNumber = answer.getPhone();
-			return new PreValidationResponse(NEXT_STAGE, "check phone");
+			nextStageName = "check phone";
 		}
 		
-		return new PreValidationResponse(NOT_FOUND, "-1");
+		if(nextStageName.equals("")) return null;
+		else return nextStageName;
 	}
 	
 	@Override
@@ -64,7 +73,7 @@ public class GlobalStage extends IStage // Стадия приветствия
 		validators.put("new competition", (answer) -> true);
 		validators.put("register", (answer) -> true);
 		
-		validators.put("0", (answer) ->
+		validators.put("send commands", (answer) ->
 		{
 			int id = Main.updateHandler.getActiveUser().femidaID;
 			Referee referee = new Referee(id);

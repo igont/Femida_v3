@@ -2,7 +2,6 @@ package main.java.org.example.Bot.Dialogue.MainDialogueMenu;
 
 import main.java.org.example.Bot.Dialogue.Answer;
 import main.java.org.example.Bot.Dialogue.IStage;
-import main.java.org.example.Bot.Dialogue.Interfaces.PreValidationResponse;
 import main.java.org.example.Bot.Excel.ExcelParser;
 import main.java.org.example.Bot.Excel.RefereePosition;
 import main.java.org.example.Bot.Excel.Templates.Competition;
@@ -20,9 +19,9 @@ import static main.java.org.example.Bot.Dialogue.Interfaces.ValidationResult.*;
 
 public class NewCompetitionStage extends IStage
 {
-	public NewCompetitionStage(Map<String, IStage> stages)
+	public NewCompetitionStage(String name)
 	{
-		init(stages.size() + "");
+		super(name);
 	}
 	
 	@Override
@@ -37,23 +36,23 @@ public class NewCompetitionStage extends IStage
 	}
 	
 	@Override
-	public PreValidationResponse preValidation(Answer answer)
+	public String preValidation(Answer answer)
 	{
-		if(Objects.equals(answer.getMessage(), "/NewCompetition")) return new PreValidationResponse(REPEAT, stageName);
-		if(answer.hasDocument()) return new PreValidationResponse(NEXT_STAGE, "6");
-		return new PreValidationResponse(NOT_FOUND, "-1");
+		if(Objects.equals(answer.getMessage(), "/NewCompetition")) return stageName;
+		if(answer.hasDocument()) return "process document";
+		return null;
 	}
 	
 	@Override
 	public void addValidators()
 	{
-		validators.put(stageName + "", (answer) ->
+		validators.put(stageName, (answer) ->
 		{
 			action();
 			return false;
 		});
 		
-		validators.put("6", (answer) ->
+		validators.put("process document", (answer) ->
 		{
 			ExcelParser parser;
 			try

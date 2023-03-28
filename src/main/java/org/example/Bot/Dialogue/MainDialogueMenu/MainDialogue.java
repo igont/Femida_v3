@@ -14,10 +14,10 @@ public class MainDialogue extends IDialogue
 	{
 		stages = new HashMap<>();
 		
-		stages.put("global stage", new GlobalStage(stages));
-		stages.put("new referee",new NewRefereeStage(stages));
-		stages.put("new competition",new NewCompetitionStage(stages));
-		stages.put("register",new RegisterStage(stages));
+		stages.put("global stage", new GlobalStage("global stage"));
+		stages.put("new referee",new NewRefereeStage("new referee"));
+		stages.put("new competition",new NewCompetitionStage("new competition"));
+		stages.put("register",new RegisterStage("register"));
 
 
 		changeStage("global stage");

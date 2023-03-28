@@ -92,6 +92,10 @@ public class Answer
 	{
 		return message;
 	}
+	public boolean hasMessage()
+	{
+		return message != null;
+	}
 
 
 	public Update getUpdate()
