@@ -8,21 +8,21 @@ import java.util.Map;
 
 public abstract class IStage
 {
-	protected int stageNum;
+	protected String stageName;
 	public abstract void action();
 	public abstract PreValidationResponse preValidation(Answer answer);
 
-	public Map<Integer, IValidator> validators = new HashMap<>();
+	public Map<String, IValidator> validators = new HashMap<>();
 	public abstract void addValidators();
 
-	public int getStageNum()
+	public String getStageName()
 	{
-		return stageNum;
+		return stageName;
 	}
 
-	protected void init(int stageNum)
+	protected void init(String stageNum)
 	{
-		this.stageNum = stageNum;
+		this.stageName = stageNum;
 		addValidators();
 	}
 }

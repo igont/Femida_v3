@@ -3,9 +3,9 @@ package main.java.org.example.Bot.Dialogue.Interfaces;
 public class PreValidationResponse
 {
 	private ValidationResult validationResult;
-	private int nextStage;
+	private String nextStage;
 
-	public PreValidationResponse(ValidationResult validationResult, int nextStage)
+	public PreValidationResponse(ValidationResult validationResult, String nextStage)
 	{
 		this.validationResult = validationResult;
 		this.nextStage = nextStage;
@@ -16,7 +16,7 @@ public class PreValidationResponse
 		return validationResult;
 	}
 
-	public int getNextStage()
+	public String getNextStage()
 	{
 		return nextStage;
 	}

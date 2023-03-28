@@ -79,6 +79,7 @@ public class Referee
 		refereeID = -1;
 		category = "";
 	}
+	
 	public static Referee getRandomReferee()
 	{
 		List<String> surNames = List.of("Бишкеков", "Арбузов", "Архипов", "Осипов", "Белов", "Белоус", "Бондаренко", "Букин", "Волков", "Давыдов", "Духов", "Егоров", "Квасов");
@@ -219,6 +220,37 @@ public class Referee
 			if(resultSet == null)
 			{
 				System.out.printf("❗️Referee not found phone: [%s]\n", phone);
+				return -1;
+			}
+			else if(resultSet.next())
+			{
+				return resultSet.getInt("id");
+			}
+			return -1;
+		}
+		catch(SQLException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public static int findRefereeByFIO(String surname, String name, String patronymic)
+	{
+		Connection connection = Main.sql.mainDatabase.connection;
+		ResultSet resultSet;
+		try
+		{
+			PreparedStatement preparedStatement;
+			preparedStatement = connection.prepareStatement("select * from referee where surname = ? and name = ? and patronymic = ?;");
+			preparedStatement.setString(1, surname);
+			preparedStatement.setString(2, name);
+			preparedStatement.setString(3, patronymic);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			if(resultSet == null)
+			{
+				System.out.printf("❗️Referee not found FIO: [%s] [%s] [%s]\n", surname, name, patronymic);
 				return -1;
 			}
 			else if(resultSet.next())

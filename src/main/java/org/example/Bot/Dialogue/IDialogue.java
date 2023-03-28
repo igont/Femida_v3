@@ -6,14 +6,13 @@ import main.java.org.example.Bot.TG.TGSender;
 import main.java.org.example.Main;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.List;
-import java.util.Stack;
+import java.util.Map;
 
 import static main.java.org.example.Bot.Dialogue.Interfaces.ValidationResult.*;
 
 public abstract class IDialogue
 {
-	public List<IStage> stages;
+	public Map<String, IStage> stages;
 	private IStage currentStage;
 	
 	public void start()
@@ -21,7 +20,7 @@ public abstract class IDialogue
 	
 	}
 	
-	public void changeStage(int nextStage)
+	public void changeStage(String nextStage)
 	{
 		currentStage = stages.get(nextStage);
 		currentStage.action();
@@ -53,56 +52,56 @@ public abstract class IDialogue
 			{
 				try
 				{
-					if(checkedStage.stageNum != preValidationResponse.getNextStage()) // Если это не та же самая стадия
+					if(checkedStage.stageName != preValidationResponse.getNextStage()) // Если это не та же самая стадия
 					{
-						if(checkedStage.validators.get(preValidationResponse.getNextStage()).validate(answer)) // Валидируемся на следующую
+						if(checkedStage.validators.get(preValidationResponse.getNextStage() + "").validate(answer)) // Валидируемся на следующую
 						{
-							System.out.println(Main.updateHandler.getActiveUser().name + ": " + checkedStage.stageNum + " --> " + preValidationResponse.getNextStage());
+							System.out.println(Main.updateHandler.getActiveUser().name + ": " + checkedStage.stageName + " --> " + preValidationResponse.getNextStage());
 							changeStage(preValidationResponse.getNextStage());
 						}
 						else
 						{
-							System.out.println(Main.updateHandler.getActiveUser().name + ": " + checkedStage.stageNum + " --> " + preValidationResponse.getNextStage() + " [false] --> " + Main.updateHandler.getActiveUser().dialogue.currentStage.stageNum);
+							System.out.println(Main.updateHandler.getActiveUser().name + ": " + checkedStage.stageName + " --> " + preValidationResponse.getNextStage() + " [false] --> " + Main.updateHandler.getActiveUser().dialogue.currentStage.stageName);
 						}
 					}
 				}
 				catch(NullPointerException e)
 				{
-					System.out.printf("❗Next stage: %s is null in stage: %s\n", preValidationResponse.getNextStage(), checkedStage.stageNum);
+					System.out.printf("❗Next stage: %s is null in stage: %s\n", preValidationResponse.getNextStage(), checkedStage.stageName);
 				}
 			}
 			
 			case REPEAT ->
 			{
-				if(checkedStage.validators.get(preValidationResponse.getNextStage()).validate(answer)) // Валидируемся заново
+				if(checkedStage.validators.get(preValidationResponse.getNextStage() + "").validate(answer)) // Валидируемся заново
 				{
-					System.out.println(Main.updateHandler.getActiveUser().name + ": " + checkedStage.stageNum + " --> " + checkedStage.stageNum);
+					System.out.println(Main.updateHandler.getActiveUser().name + ": " + checkedStage.stageName + " --> " + checkedStage.stageName);
 					changeStage(preValidationResponse.getNextStage());
 				}
 				else
 				{
-					System.out.println(Main.updateHandler.getActiveUser().name + ": " + checkedStage.stageNum + " --> " + checkedStage.stageNum + " [false] --> " + Main.updateHandler.getActiveUser().dialogue.currentStage.stageNum);
+					System.out.println(Main.updateHandler.getActiveUser().name + ": " + checkedStage.stageName + " --> " + checkedStage.stageName + " [false] --> " + Main.updateHandler.getActiveUser().dialogue.currentStage.stageName);
 				}
 			}
 			
 			case FORCE_REPEAT ->
 			{
-				System.out.println(Main.updateHandler.getActiveUser().name + ": " + checkedStage.stageNum + " --> " + checkedStage.stageNum);
-				checkedStage.validators.get(preValidationResponse.getNextStage()).validate(null); // Валидируемся без параметров
+				System.out.println(Main.updateHandler.getActiveUser().name + ": " + checkedStage.stageName + " --> " + checkedStage.stageName);
+				checkedStage.validators.get(preValidationResponse.getNextStage() + "").validate(null); // Валидируемся без параметров
 			}
 			
 			case NOT_FOUND ->
 			{
-				System.out.println(Main.updateHandler.getActiveUser().name + ": " + checkedStage.stageNum + " --> ???");
+				System.out.println(Main.updateHandler.getActiveUser().name + ": " + checkedStage.stageName + " --> ???");
 				return NOT_FOUND;
 			}
 		}
 		return NEXT_STAGE;
 	}
 	
-	public int getCurrentStage()
+	public String getCurrentStage()
 	{
-		return currentStage.getStageNum();
+		return currentStage.getStageName();
 	}
 }
 

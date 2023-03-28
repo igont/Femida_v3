@@ -4,28 +4,27 @@ import main.java.org.example.Bot.Dialogue.IDialogue;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainDialogue extends IDialogue
 {
 	@Override
 	public void start()
 	{
-		stages = new ArrayList<>();
-		stages.add(new GlobalStage(stages));            	//0
-		stages.add(new NewRefereeStage(stages));        	//1  NewReferee
-		stages.add(null);                                   //2  GlobalRating
-		stages.add(new NewCompetitionStage(stages));    	//3  NewCompetition
-		stages.add(null);                                   //4  Register
-		stages.add(null);                                   //5  GetPhone
-		stages.add(null);                                   //6
-		stages.add(new RegisterStage(stages));              //7  Register
+		stages = new HashMap<>();
+		
+		stages.put("global stage", new GlobalStage(stages));
+		stages.put("new referee",new NewRefereeStage(stages));
+		stages.put("new competition",new NewCompetitionStage(stages));
+		stages.put("register",new RegisterStage(stages));
 
 
-		changeStage(0);
+		changeStage("global stage");
 	}
 
 	@Override
-	public void changeStage(int nextStage)
+	public void changeStage(String nextStage)
 	{
 		super.changeStage(nextStage);
 	}

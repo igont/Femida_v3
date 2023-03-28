@@ -6,21 +6,21 @@ import main.java.org.example.Bot.Dialogue.Interfaces.PreValidationResponse;
 import main.java.org.example.Bot.Dialogue.Interfaces.ValidationResult;
 import main.java.org.example.Bot.Excel.Templates.Referee;
 import main.java.org.example.Bot.TG.TGSender;
+import main.java.org.example.Main;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.util.StringUtil;
 
 import java.sql.SQLOutput;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class RegisterStage extends IStage
 {
-	public RegisterStage(List<IStage> list)
+	public RegisterStage(Map<String, IStage> stages)
 	{
-		init(list.size());
+		init(stages.size() + "");
 	}
 	
-	private int subStage = 1;
+	private String subStage = "get surname";
 	
 	Referee referee = new Referee();
 	
@@ -36,36 +36,73 @@ public class RegisterStage extends IStage
 	{
 		if(Objects.equals(answer.getMessage(), "/Cancel"))
 		{
-			return new PreValidationResponse(ValidationResult.NEXT_STAGE, 0);
+			return new PreValidationResponse(ValidationResult.NEXT_STAGE, "0");
 		}
-		return new PreValidationResponse(ValidationResult.NEXT_STAGE, subStage);
+		if(answer.getMessage().startsWith("/")) return new PreValidationResponse(ValidationResult.NEXT_STAGE, "-1");
+		return new PreValidationResponse(ValidationResult.NEXT_STAGE, subStage + "");
 	}
 	
 	@Override
 	public void addValidators()
 	{
-		validators.put(0, (Answer) ->
+		validators.put("0", (answer) ->
 		{
-			TGSender.send("Регистрация аккаунта отменена");
+			TGSender.send("✅Регистрация аккаунта отменена");
 			return true;
 		});
 		
-		validators.put(1, (Answer) ->
+		validators.put("get surname", (answer) ->
 		{
-			referee.setSurname(Answer.getMessage());
-			System.out.println(referee.getSurname());
-			subStage++;
+			referee.setSurname(answer.getMessage());
+			subStage = "get name";
 			
 			TGSender.send("❔Ваше настоящее имя:");
+			return false;
+		});
+		validators.put("get name", (answer) ->
+		{
+			referee.setName(answer.getMessage());
+			subStage = "get patronymic";
+			
+			TGSender.send("❔Ваше настоящее отчество:");
+			return false;
+		});
+		validators.put("get patronymic", (answer) ->
+		{
+			referee.setPatronymic(answer.getMessage());
+			subStage = "get birth";
+			
+			int id = Referee.findRefereeByFIO(referee.getSurname(), referee.getName(), referee.getPatronymic());
+			
+			if(id != -1)
+			{
+				TGSender.send("Аккаунт с таким ФИО уже существует. Обратитесь в поддержку для смены номер телефона /Support");
+			}
+			else
+			{
+				referee.setPhone(Main.updateHandler.getActiveUser().phoneNumber);
+				
+				TGSender.send("Для автоматического входа будет использован Ваш текущий номер телефона: " + referee.getPhone());
+				TGSender.send("Ваша дата рождения: пример формата: 31.12.1999)");
+			}
 			
 			return false;
 		});
-		validators.put(2, (Answer) ->
+		validators.put("get birth", (answer) ->
 		{
-			referee.setName(Answer.getMessage());
-			System.out.println(referee.getName());
-			subStage++;
+			referee.setPatronymic(answer.getMessage());
+			subStage = "get birth";
 			
+			String[] split = answer.getMessage().split("\\.");
+			Calendar calendar = new GregorianCalendar();
+			
+			int day = Integer.parseInt(split[0]);
+			int month = Integer.parseInt(split[1]);
+			int year = Integer.parseInt(split[2]);
+			
+			calendar.set(year,month,day);
+			TGSender.send(day + "." + month + "." + year);
+			TGSender.send("Дата рождения установлена: " + calendar.get(Calendar.DAY_OF_MONTH) + "." + calendar.get(Calendar.MONTH) + "." + calendar.get(Calendar.YEAR));
 			return false;
 		});
 	}

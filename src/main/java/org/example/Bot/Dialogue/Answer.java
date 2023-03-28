@@ -18,7 +18,7 @@ public class Answer
 	private String from = "";
 	private String message;
 	private String phone = "";
-	private int currentStage;
+	private String currentStageName;
 	private String fileName = "";
 	private int nextStage = -1;
 	private Update update;
@@ -26,7 +26,7 @@ public class Answer
 
 	public Answer(Update update)
 	{
-		currentStage = Main.updateHandler.getActiveUser().dialogue.getCurrentStage();
+		currentStageName = Main.updateHandler.getActiveUser().dialogue.getCurrentStage();
 		this.update = update;
 		from = SafeUpdateParser.getName();
 		chatID = SafeUpdateParser.getChatID();
@@ -107,7 +107,7 @@ public class Answer
 	@Override
 	public String toString()
 	{
-		return "Answer{" + "from='" + from + '\'' + ", message='" + message + '\'' + ", phone='" + phone + '\'' + ", currentStage=" + currentStage + ", fileName='" + fileName + '\'' + ", nextStage=" + nextStage + ", chatID=" + chatID + '}';
+		return "Answer{" + "from='" + from + '\'' + ", message='" + message + '\'' + ", phone='" + phone + '\'' + ", currentStage=" + currentStageName + ", fileName='" + fileName + '\'' + ", nextStage=" + nextStage + ", chatID=" + chatID + '}';
 	}
 
 	public boolean hasDocument()

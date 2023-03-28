@@ -18,15 +18,16 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static main.java.org.example.Bot.Dialogue.Interfaces.ValidationResult.*;
 
 public class GlobalStage extends IStage // Стадия приветствия
 {
-	public GlobalStage(List<IStage> list)
+	public GlobalStage(Map<String, IStage> stages)
 	{
-		init(list.size());
+		init(stages.size() + "");
 	}
 	
 	@Override
@@ -37,29 +38,33 @@ public class GlobalStage extends IStage // Стадия приветствия
 	@Override
 	public PreValidationResponse preValidation(Answer answer)
 	{
-		if(Objects.equals(answer.getMessage(), "/commands")) return new PreValidationResponse(FORCE_REPEAT, 0);
-		if(Objects.equals(answer.getMessage(), "/start")) return new PreValidationResponse(FORCE_REPEAT, 0);
-		
-		if(Objects.equals(answer.getMessage(), "/NewReferee")) return new PreValidationResponse(NEXT_STAGE, 1);
-		if(Objects.equals(answer.getMessage(), "/GlobalRating")) return new PreValidationResponse(NEXT_STAGE, 2);
-		if(Objects.equals(answer.getMessage(), "/NewCompetition")) return new PreValidationResponse(NEXT_STAGE, 3);
-		if(Objects.equals(answer.getMessage(), "/Account")) return new PreValidationResponse(NEXT_STAGE, 4);
-		if(Objects.equals(answer.getMessage(), "/PlanCompetition")) return new PreValidationResponse(NEXT_STAGE, 6);
-		if(Objects.equals(answer.getMessage(), "/Register")) return new PreValidationResponse(NEXT_STAGE, 7);
+		if(Objects.equals(answer.getMessage(), "/commands")) return new PreValidationResponse(FORCE_REPEAT, "0");
+		if(Objects.equals(answer.getMessage(), "/start")) return new PreValidationResponse(FORCE_REPEAT, "0");
+		if(Objects.equals(answer.getMessage(), "/NewReferee")) return new PreValidationResponse(NEXT_STAGE, "new referee");
+		if(Objects.equals(answer.getMessage(), "/GlobalRating")) return new PreValidationResponse(NEXT_STAGE, "global rating");
+		if(Objects.equals(answer.getMessage(), "/NewCompetition")) return new PreValidationResponse(NEXT_STAGE, "new competition");
+		if(Objects.equals(answer.getMessage(), "/Account")) return new PreValidationResponse(NEXT_STAGE, "account");
+		if(Objects.equals(answer.getMessage(), "/PlanCompetition")) return new PreValidationResponse(NEXT_STAGE, "plan competition");
+		if(Objects.equals(answer.getMessage(), "/Register")) return new PreValidationResponse(NEXT_STAGE, "register");
+		if(Objects.equals(answer.getMessage(), "/About")) return new PreValidationResponse(NEXT_STAGE, "about");
 		
 		if(answer.hasPhone())
 		{
 			Main.updateHandler.getActiveUser().phoneNumber = answer.getPhone();
-			return new PreValidationResponse(NEXT_STAGE, 5);
+			return new PreValidationResponse(NEXT_STAGE, "check phone");
 		}
 		
-		return new PreValidationResponse(NOT_FOUND, -1);
+		return new PreValidationResponse(NOT_FOUND, "-1");
 	}
 	
 	@Override
 	public void addValidators()
 	{
-		validators.put(0, (Answer) ->
+		validators.put("new referee", (answer) -> true);
+		validators.put("new competition", (answer) -> true);
+		validators.put("register", (answer) -> true);
+		
+		validators.put("0", (answer) ->
 		{
 			int id = Main.updateHandler.getActiveUser().femidaID;
 			Referee referee = new Referee(id);
@@ -70,26 +75,32 @@ public class GlobalStage extends IStage // Стадия приветствия
 				if(!Objects.equals(Main.updateHandler.getActiveUser().phoneNumber, ""))
 				{
 					head = """
-						Аккаунта с вашим номером телефона нет в списках судей.
-						
-						Для вас доступны стандартные действия:
-						
-						""";
+							Аккаунта с вашим номером телефона нет в списках судей.
+							
+							Для вас доступны стандартные действия:
+							
+							""";
 				}
 				else
 				{
 					head = """
-						Для получения полного списка команд перейдите в ваш /Account, затем вновь вызовите список команд /commands из Меню.
-						
-						Пока для вас доступны базовые действия:
-						
-						""";
+							Для получения полного списка команд перейдите в ваш /Account, затем вновь вызовите список команд /commands из Меню.
+							
+							Пока для вас доступны базовые действия:
+							
+							""";
 				}
-			}else
+			}
+			else
 			{
 				head = referee.getFIO() + ", Вам доступны следующие команды:\n\n";
 			}
 			
+			String about = """
+					*ℹ️Информация о боте:*
+					/About
+					
+					""";
 			
 			String newReferee = """
 					➕*Зарегистрировать нового судью:*
@@ -116,7 +127,7 @@ public class GlobalStage extends IStage // Стадия приветствия
 					""";
 			
 			String account = """
-					😐*Мой аккаунт*
+					🙂*Мой аккаунт*
 					/Account
 					
 					""";
@@ -138,27 +149,19 @@ public class GlobalStage extends IStage // Стадия приветствия
 				if(role.getPossibility(Possibility.ADMIN)) commands += admin;
 			}
 			
-			commands += globalRating + account;
+			commands += about + globalRating + account;
 			TGSender.send(commands);
 			return false;
 		});
 		
-		//NewReferee
-		validators.put(1, (Answer answer) -> true);
-		
-		// GlobalRating
-		validators.put(2, (Answer) ->
+		validators.put("global rating", (answer) ->
 		{
 			String rating = Main.sql.getGlobalRating();
 			TGSender.send("`Баллы | ФИО судьи\n------+-------------------\n" + rating + "`");
 			return false;
 		});
 		
-		//NewCompetition
-		validators.put(3, (Answer) -> true);
-		
-		//Register
-		validators.put(4, (Answer) ->
+		validators.put("account", (answer) ->
 		{
 			if(Main.updateHandler.getActiveUser().femidaID == -1)
 			{
@@ -174,8 +177,7 @@ public class GlobalStage extends IStage // Стадия приветствия
 			return false;
 		});
 		
-		//Phone validation
-		validators.put(5, (Answer) ->
+		validators.put("check phone", (answer) ->
 		{
 			String phone = Main.updateHandler.getActiveUser().phoneNumber;
 			//phone = new Referee(1).getPhone();
@@ -188,7 +190,7 @@ public class GlobalStage extends IStage // Стадия приветствия
 			
 			if(id == -1)
 			{
-				TGSender.send("❗️️️️Не удалось найти рефери с таким номером\nМожете отправить заявку на создание учетной записи /Register");
+				TGSender.send("❗️️️️Не удалось найти рефери с таким номером.\n\nЛибо вашей учетной записи не существует, тогда создайте ее: /Register\n\nЛибо она привязана на другой ваш номер телефона, тогда /Support\n\n Если вы не уверены, существует ли ваш аккаутн, найдите себя в поиске: /Search");
 			}
 			else
 			{
@@ -199,12 +201,50 @@ public class GlobalStage extends IStage // Стадия приветствия
 			return false;
 		});
 		
-		validators.put(6, (Answer) ->
+		validators.put("plan competition", (answer) ->
 		{
 			TGSender.send("❗️️️️Еще не доступно...");
 			return false;
 		});
-		validators.put(7, (Answer) ->true);
+		
+		validators.put("about", (answer) ->
+		{
+			String s = """
+					*Возможности FEMIDA:*
+					Бот предназначен для ведения аккаунтов спортивных судей и организации мероприятий.
+					
+					*Для рядовых пользователей:*
+					🔸 Ведение рейтинга и персонального опыта судьи для. Поможет в выборе при составлении судейской бригады руководителем. Чем более подходящая характеристика судьи, тем больше вероятность быть приглашенным.
+					
+					🔸 Доступ к архивным результатам прошедших соревнований, их можно получить с помощью поиска по критериям
+					
+					🔸 Доступ к всеобщему рейтингу судей в спортивной дисцеплине. Список судей сортируется по количестку баллов, набранному за всё время. Существуют разные виды сортировок
+					
+					🔸 Доступ ко всем функциям бота со всех типов устройств. Мобильные телефоны, персональные ПК, ноутбуки...
+					
+					
+					*Для руководителй и организаторов:*
+					🔹 Планирование будущих соревнований. Для согласования графиков и предварительного набора судейской бригады
+					
+					🔹 Регистрация судей на будущие соревнования. Для построения общей ситуации с судейской бригады на будущем соревновании
+					
+					🔹 Быстрый способ найти состав судейской бригады через рассылку по критериям. Отправка персональных приглашений на конкретные должности
+					
+					🔹 Автоматизированный поиск судей для бригады по критериям. Подходящие судьи будут автоматически уведомлены о планируемом мероприятии
+					
+					🔹 Заполнение отчетов о проведенных соревнований в доступной форме. Нет необходимости работать через персональный компьютер
+					
+					
+					*Для администраторов*
+					🔸 Интуитивно понятная система ввода данных. Структурированная таблица Excel, с помощью которых осуществляется ввод новых соревнований.
+					
+					🔸 Отказоустойчивая система. При ошибке в информации не произойдет ничего критического.
+					
+					🔸 Перед занесением информации в общую базу - она проходит дополнительну проверку. Лишь после одобрения людей, назначенных на должность проверяющих - информация попадает в базу
+					""";
+			TGSender.send(s);
+			return false;
+		});
 	}
 	
 	private static void sendPhoneButton()

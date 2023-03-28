@@ -6,31 +6,24 @@ import main.java.org.example.Bot.Dialogue.Interfaces.PreValidationResponse;
 import main.java.org.example.Bot.Excel.ExcelParser;
 import main.java.org.example.Bot.Excel.Templates.Referee;
 import main.java.org.example.Bot.Files.MyFiles;
-import main.java.org.example.Bot.Files.ResourcesFiles;
 import main.java.org.example.Bot.TG.TGSender;
-import main.java.org.example.DataBase.SQL;
 import main.java.org.example.Main;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Date;
 import java.text.DecimalFormat;
 import java.util.*;
 
 import static main.java.org.example.Bot.Dialogue.Interfaces.ValidationResult.*;
-import static main.java.org.example.Bot.Files.ResourcesFiles.TEMPLATE_REFEREE;
 
 public class NewRefereeStage extends IStage
 {
-	public NewRefereeStage(List<IStage> list)
+	public NewRefereeStage(Map<String, IStage> stages)
 	{
-		init(list.size());
+		init(stages.size() + "");
 	}
 	
 	@Override
@@ -48,22 +41,22 @@ public class NewRefereeStage extends IStage
 	@Override
 	public PreValidationResponse preValidation(Answer answer)
 	{
-		if(Objects.equals(answer.getMessage(), "/NewReferee")) return new PreValidationResponse(REPEAT, stageNum);
-		if(answer.hasDocument()) return new PreValidationResponse(NEXT_STAGE, 7);
-		return new PreValidationResponse(NOT_FOUND, -1);
+		if(Objects.equals(answer.getMessage(), "/NewReferee")) return new PreValidationResponse(REPEAT, stageName);
+		if(answer.hasDocument()) return new PreValidationResponse(NEXT_STAGE, "7");
+		return new PreValidationResponse(NOT_FOUND, "-1");
 	}
 	
 	@Override
 	public void addValidators()
 	{
-		validators.put(stageNum, (Answer) ->
+		validators.put(stageName + "", (answer) ->
 		{
 			action();
 			
 			//TGSender.send("Вы и так уже в процессе добавления нового судьи, отправьте заполненный файл");
 			return false;
 		});
-		validators.put(7, (Answer answer) ->
+		validators.put("7", (answer) ->
 		{
 			ExcelParser parser;
 			List<Referee> refereeToAdd = new ArrayList<>();

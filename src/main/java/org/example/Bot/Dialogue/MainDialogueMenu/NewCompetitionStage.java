@@ -8,25 +8,21 @@ import main.java.org.example.Bot.Excel.RefereePosition;
 import main.java.org.example.Bot.Excel.Templates.Competition;
 import main.java.org.example.Bot.Excel.Templates.Referee;
 import main.java.org.example.Bot.Files.MyFiles;
-import main.java.org.example.Bot.Files.ResourcesFiles;
 import main.java.org.example.Bot.TG.TGSender;
 import main.java.org.example.Main;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static main.java.org.example.Bot.Dialogue.Interfaces.ValidationResult.*;
 
 public class NewCompetitionStage extends IStage
 {
-	public NewCompetitionStage(List<IStage> list)
+	public NewCompetitionStage(Map<String, IStage> stages)
 	{
-		init(list.size());
+		init(stages.size() + "");
 	}
 	
 	@Override
@@ -43,21 +39,21 @@ public class NewCompetitionStage extends IStage
 	@Override
 	public PreValidationResponse preValidation(Answer answer)
 	{
-		if(Objects.equals(answer.getMessage(), "/NewCompetition")) return new PreValidationResponse(REPEAT, stageNum);
-		if(answer.hasDocument()) return new PreValidationResponse(NEXT_STAGE, 6);
-		return new PreValidationResponse(NOT_FOUND, -1);
+		if(Objects.equals(answer.getMessage(), "/NewCompetition")) return new PreValidationResponse(REPEAT, stageName);
+		if(answer.hasDocument()) return new PreValidationResponse(NEXT_STAGE, "6");
+		return new PreValidationResponse(NOT_FOUND, "-1");
 	}
 	
 	@Override
 	public void addValidators()
 	{
-		validators.put(stageNum, (Answer) ->
+		validators.put(stageName + "", (answer) ->
 		{
 			action();
 			return false;
 		});
 		
-		validators.put(6, (Answer answer) ->
+		validators.put("6", (answer) ->
 		{
 			ExcelParser parser;
 			try
