@@ -1,4 +1,4 @@
-package main.java.org.example.Bot.Files;
+package org.example.Bot.Files;
 
 public enum ResourcesFiles
 {

@@ -1,6 +1,6 @@
-package main.java.org.example.Bot.Excel.Templates;
+package org.example.Bot.Excel.Templates;
 
-import main.java.org.example.Bot.Excel.RefereePosition;
+import org.example.Bot.Excel.RefereePosition;
 
 public record CompetitionMember(int refereeID, RefereePosition refereePosition, int points)
 {

@@ -1,4 +1,4 @@
-package main.java.org.example.DataBase;
+package org.example.DataBase;
 
 public enum Type
 {

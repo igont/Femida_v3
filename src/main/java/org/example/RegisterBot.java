@@ -1,6 +1,6 @@
-package main.java.org.example;
+package org.example;
 
-import main.java.org.example.Bot.TG.SafeUpdateParser;
+import org.example.Bot.TG.SafeUpdateParser;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 

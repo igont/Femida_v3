@@ -1,6 +1,6 @@
-package main.java.org.example.DataBase.Interfaces;
+package org.example.DataBase.Interfaces;
 
-import main.java.org.example.DataBase.Type;
+import org.example.DataBase.Type;
 
 import java.util.Objects;
 

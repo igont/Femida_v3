@@ -1,4 +1,4 @@
-package main.java.org.example.Bot.TG;
+package org.example.Bot.TG;
 
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
@@ -11,7 +11,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.File;
 
-import static main.java.org.example.Main.myBot;
+import static org.example.Main.myBot;
 
 public class TGSender
 {

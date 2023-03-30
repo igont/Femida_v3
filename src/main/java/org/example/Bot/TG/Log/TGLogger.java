@@ -1,4 +1,4 @@
-package main.java.org.example.Bot.TG.Log;
+package org.example.Bot.TG.Log;
 
 public class TGLogger
 {

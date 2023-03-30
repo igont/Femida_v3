@@ -1,4 +1,4 @@
-package main.java.org.example.Bot.Excel;
+package org.example.Bot.Excel;
 
 import java.util.Random;
 

@@ -1,14 +1,10 @@
-package main.java.org.example.DataBase.Interfaces;
+package org.example.DataBase.Interfaces;
 
-import main.java.org.example.Bot.Excel.Templates.Referee;
-import main.java.org.example.DataBase.SQL;
+import org.example.DataBase.SQL;
 
 import java.sql.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import static main.java.org.example.DataBase.SQL.*;
 
 public class DataBase
 {
@@ -26,7 +22,7 @@ public class DataBase
 		this.name = name;
 		try
 		{
-			logIn(name, USER, PASSWORD);
+			logIn(name, SQL.USER, SQL.PASSWORD);
 			System.out.println("✅Connected to database: " + name);
 		}
 		catch(SQLException e)
@@ -39,7 +35,7 @@ public class DataBase
 				System.out.println("Создаю нового пользователя");
 				try
 				{
-					SQL.execute("create user " + USER + " with encrypted password '" + PASSWORD + "';", statement);
+					SQL.execute("create user " + SQL.USER + " with encrypted password '" + SQL.PASSWORD + "';", statement);
 				}
 				catch(SQLException exc)
 				{
@@ -49,7 +45,7 @@ public class DataBase
 				create();
 
 				System.out.println("Захожу через нормального пользователя в эту базу данных");
-				logIn(name, USER, PASSWORD);
+				logIn(name, SQL.USER, SQL.PASSWORD);
 
 				System.out.println("✅Connected to database: " + name);
 			}
@@ -74,7 +70,7 @@ public class DataBase
 
 	private void logIn(String name, String user, String password) throws SQLException
 	{
-		connection = DriverManager.getConnection((DB_URL + name), user, password);
+		connection = DriverManager.getConnection((SQL.DB_URL + name), user, password);
 		statement = connection.createStatement();
 	}
 

@@ -1,14 +1,12 @@
-package main.java.org.example;
+package org.example;
 
-import main.java.org.example.Bot.Excel.ExcelStorage;
-import main.java.org.example.Bot.TG.UpdateHandler;
-import main.java.org.example.DataBase.SQL;
+import org.example.Bot.Excel.ExcelStorage;
+import org.example.Bot.TG.UpdateHandler;
+import org.example.DataBase.SQL;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Scanner;
 
 

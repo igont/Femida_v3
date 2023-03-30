@@ -1,6 +1,5 @@
-package main.java.org.example.Bot.TG;
+package org.example.Bot.TG;
 
-import main.java.org.example.Main;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class SafeUpdateParser

@@ -1,12 +1,12 @@
-package main.java.org.example.Bot.Dialogue.MainDialogueMenu;
+package org.example.Bot.Dialogue.MainDialogueMenu;
 
-import main.java.org.example.Bot.Dialogue.Answer;
-import main.java.org.example.Bot.Dialogue.IStage;
-import main.java.org.example.Bot.Excel.ExcelParser;
-import main.java.org.example.Bot.Excel.Templates.Referee;
-import main.java.org.example.Bot.Files.MyFiles;
-import main.java.org.example.Bot.TG.TGSender;
-import main.java.org.example.Main;
+import org.example.Bot.Dialogue.Answer;
+import org.example.Bot.Dialogue.IStage;
+import org.example.Bot.Excel.ExcelParser;
+import org.example.Bot.Excel.Templates.Referee;
+import org.example.Bot.Files.MyFiles;
+import org.example.Bot.TG.TGSender;
+import org.example.Main;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.CellType;
 
@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.sql.Date;
 import java.text.DecimalFormat;
 import java.util.*;
-
-import static main.java.org.example.Bot.Dialogue.Interfaces.ValidationResult.*;
 
 public class NewRefereeStage extends IStage
 {

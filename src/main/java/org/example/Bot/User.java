@@ -1,9 +1,7 @@
-package main.java.org.example.Bot;
+package org.example.Bot;
 
-import main.java.org.example.Bot.Dialogue.IDialogue;
-import main.java.org.example.Bot.Dialogue.MainDialogueMenu.MainDialogue;
-import main.java.org.example.Bot.Dialogue.Role;
-import main.java.org.example.Bot.Dialogue.Possibility;
+import org.example.Bot.Dialogue.MainDialogueMenu.MainDialogue;
+import org.example.Bot.Dialogue.IDialogue;
 
 public class User
 {

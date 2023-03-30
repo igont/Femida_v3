@@ -1,6 +1,6 @@
-package main.java.org.example.Bot.Dialogue;
+package org.example.Bot.Dialogue;
 
-import main.java.org.example.Bot.Dialogue.Interfaces.IValidator;
+import org.example.Bot.Dialogue.Interfaces.IValidator;
 
 import java.util.HashMap;
 import java.util.Map;

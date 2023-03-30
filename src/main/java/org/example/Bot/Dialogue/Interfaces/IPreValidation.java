@@ -1,4 +1,4 @@
-package main.java.org.example.Bot.Dialogue.Interfaces;
+package org.example.Bot.Dialogue.Interfaces;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
 

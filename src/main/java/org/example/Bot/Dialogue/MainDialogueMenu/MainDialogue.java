@@ -1,11 +1,9 @@
-package main.java.org.example.Bot.Dialogue.MainDialogueMenu;
+package org.example.Bot.Dialogue.MainDialogueMenu;
 
-import main.java.org.example.Bot.Dialogue.IDialogue;
+import org.example.Bot.Dialogue.IDialogue;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class MainDialogue extends IDialogue
 {

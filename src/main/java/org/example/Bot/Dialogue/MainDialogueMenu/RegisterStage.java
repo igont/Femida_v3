@@ -1,15 +1,11 @@
-package main.java.org.example.Bot.Dialogue.MainDialogueMenu;
+package org.example.Bot.Dialogue.MainDialogueMenu;
 
-import main.java.org.example.Bot.Dialogue.Answer;
-import main.java.org.example.Bot.Dialogue.IStage;
-import main.java.org.example.Bot.Dialogue.Interfaces.ValidationResult;
-import main.java.org.example.Bot.Excel.Templates.Referee;
-import main.java.org.example.Bot.TG.TGSender;
-import main.java.org.example.Main;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.util.StringUtil;
+import org.example.Bot.TG.TGSender;
+import org.example.Bot.Dialogue.Answer;
+import org.example.Bot.Dialogue.IStage;
+import org.example.Bot.Excel.Templates.Referee;
+import org.example.Main;
 
-import java.sql.SQLOutput;
 import java.util.*;
 
 public class RegisterStage extends IStage

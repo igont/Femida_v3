@@ -1,6 +1,6 @@
-package main.java.org.example.DataBase.Interfaces;
+package org.example.DataBase.Interfaces;
 
-import main.java.org.example.DataBase.SQL;
+import org.example.DataBase.SQL;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.lang.reflect.Array;
-import java.util.Objects;
 
 public class Table
 {

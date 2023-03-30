@@ -1,4 +1,4 @@
-package main.java.org.example.Bot.Dialogue;
+package org.example.Bot.Dialogue;
 
 import java.util.Arrays;
 import java.util.HashMap;

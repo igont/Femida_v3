@@ -1,8 +1,8 @@
-package main.java.org.example.Bot.Excel.Templates;
+package org.example.Bot.Excel.Templates;
 
-import main.java.org.example.Bot.Dialogue.Possibility;
-import main.java.org.example.Bot.Dialogue.Role;
-import main.java.org.example.Main;
+import org.example.Bot.Dialogue.Possibility;
+import org.example.Bot.Dialogue.Role;
+import org.example.Main;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

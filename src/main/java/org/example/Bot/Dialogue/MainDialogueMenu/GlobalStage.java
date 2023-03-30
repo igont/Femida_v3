@@ -1,26 +1,21 @@
-package main.java.org.example.Bot.Dialogue.MainDialogueMenu;
+package org.example.Bot.Dialogue.MainDialogueMenu;
 
-import main.java.org.example.Bot.Dialogue.Possibility;
-import main.java.org.example.Bot.Dialogue.Role;
-import main.java.org.example.Bot.Excel.Templates.Referee;
-import main.java.org.example.DataBase.SQL;
-import main.java.org.example.Main;
-import main.java.org.example.Bot.Dialogue.Answer;
-import main.java.org.example.Bot.Dialogue.IStage;
-import main.java.org.example.Bot.TG.SafeUpdateParser;
-import main.java.org.example.Bot.TG.TGSender;
+import org.example.Bot.Dialogue.Possibility;
+import org.example.Bot.Dialogue.Role;
+import org.example.Bot.Excel.Templates.Referee;
+import org.example.Main;
+import org.example.Bot.Dialogue.Answer;
+import org.example.Bot.Dialogue.IStage;
+import org.example.Bot.TG.SafeUpdateParser;
+import org.example.Bot.TG.TGSender;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-
-import static main.java.org.example.Bot.Dialogue.Interfaces.ValidationResult.*;
 
 public class GlobalStage extends IStage // Стадия приветствия
 {

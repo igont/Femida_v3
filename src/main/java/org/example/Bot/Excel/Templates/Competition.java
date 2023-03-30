@@ -1,10 +1,9 @@
-package main.java.org.example.Bot.Excel.Templates;
+package org.example.Bot.Excel.Templates;
 
-import main.java.org.example.Bot.Excel.RefereePosition;
-import main.java.org.example.DataBase.SQL;
+import org.example.DataBase.SQL;
+import org.example.Bot.Excel.RefereePosition;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class Competition

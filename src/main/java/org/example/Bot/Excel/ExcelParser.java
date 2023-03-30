@@ -1,7 +1,5 @@
-package main.java.org.example.Bot.Excel;
+package org.example.Bot.Excel;
 
-import main.java.org.example.Bot.Files.MyFiles;
-import main.java.org.example.Bot.Files.ResourcesFiles;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;

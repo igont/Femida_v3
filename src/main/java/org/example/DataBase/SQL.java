@@ -1,10 +1,10 @@
-package main.java.org.example.DataBase;
+package org.example.DataBase;
 
-import main.java.org.example.Bot.Excel.Templates.Competition;
-import main.java.org.example.Bot.Excel.Templates.Referee;
-import main.java.org.example.DataBase.Interfaces.Column;
-import main.java.org.example.DataBase.Interfaces.DataBase;
-import main.java.org.example.DataBase.Interfaces.Table;
+import org.example.Bot.Excel.Templates.Competition;
+import org.example.Bot.Excel.Templates.Referee;
+import org.example.DataBase.Interfaces.Column;
+import org.example.DataBase.Interfaces.DataBase;
+import org.example.DataBase.Interfaces.Table;
 import org.apache.poi.util.StringUtil;
 
 import java.sql.*;
@@ -12,7 +12,7 @@ import java.sql.Date;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static main.java.org.example.DataBase.Type.*;
+import static org.example.DataBase.Type.*;
 
 public class SQL
 {

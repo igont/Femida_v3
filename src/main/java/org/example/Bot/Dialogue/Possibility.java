@@ -1,4 +1,4 @@
-package main.java.org.example.Bot.Dialogue;
+package org.example.Bot.Dialogue;
 
 public enum Possibility
 {

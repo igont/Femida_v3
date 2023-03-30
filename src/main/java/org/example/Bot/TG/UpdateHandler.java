@@ -1,6 +1,6 @@
-package main.java.org.example.Bot.TG;
+package org.example.Bot.TG;
 
-import main.java.org.example.Bot.User;
+import org.example.Bot.User;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.ArrayList;

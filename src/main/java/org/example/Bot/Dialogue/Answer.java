@@ -1,17 +1,15 @@
-package main.java.org.example.Bot.Dialogue;
+package org.example.Bot.Dialogue;
 
-import main.java.org.example.Main;
-import main.java.org.example.Bot.Files.MyFiles;
-import main.java.org.example.Bot.TG.SafeUpdateParser;
-import main.java.org.example.Bot.TG.TGSender;
+import org.example.Main;
+import org.example.Bot.Files.MyFiles;
+import org.example.Bot.TG.SafeUpdateParser;
+import org.example.Bot.TG.TGSender;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.File;
 import java.util.Objects;
-
-import static main.java.org.example.Main.myBot;
 
 public class Answer
 {
@@ -46,8 +44,8 @@ public class Answer
 					String filePath;
 					try
 					{
-						filePath = myBot.execute(getFile).getFilePath();
-						myBot.downloadFile(filePath, new File(MyFiles.getTempPath() + fileName)); //   сохранение файла в память
+						filePath = Main.myBot.execute(getFile).getFilePath();
+						Main.myBot.downloadFile(filePath, new File(MyFiles.getTempPath() + fileName)); //   сохранение файла в память
 						this.fileName = fileName;
 					}
 					catch(TelegramApiException e)
