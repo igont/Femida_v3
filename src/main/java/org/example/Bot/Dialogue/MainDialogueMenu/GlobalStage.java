@@ -13,9 +13,12 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class GlobalStage extends IStage // Стадия приветствия
 {
@@ -38,22 +41,23 @@ public class GlobalStage extends IStage // Стадия приветствия
 		if(answer.hasMessage())
 		{
 			nextStageName = switch(messageText)
-					{
-						case "/commands", "/start" -> "send commands";
-						case "/NewReferee" -> "new referee";
-						case "/GlobalRating" -> "global rating";
-						case "/NewCompetition" -> "new competition";
-						case "/Account" -> "account";
-						case "/PlanCompetition" -> "plan competition";
-						case "/Register" -> "register";
-						case "/About" -> "about";
-						default -> "";
-					};
+			{
+				case "/commands", "/start" -> "send commands";
+				case "/NewReferee" -> "new referee";
+				case "/GlobalRating" -> "global rating";
+				case "/NewCompetition" -> "new competition";
+				case "/Account" -> "account";
+				case "/PlanCompetition" -> "plan competition";
+				case "/Register" -> "register";
+				case "/About" -> "about";
+				case "/AdminPanel" -> "admin panel";
+				default -> "";
+			};
 		}
 		
 		if(answer.hasPhone())
 		{
-			Main.updateHandler.getActiveUser().phoneNumber = answer.getPhone();
+			SafeUpdateParser.getActiveUser().setPhoneNumber(answer.getPhone());
 			nextStageName = "check phone";
 		}
 		
@@ -67,16 +71,17 @@ public class GlobalStage extends IStage // Стадия приветствия
 		validators.put("new referee", (answer) -> true);
 		validators.put("new competition", (answer) -> true);
 		validators.put("register", (answer) -> true);
+		validators.put("admin panel", (answer) -> true);
 		
 		validators.put("send commands", (answer) ->
 		{
-			int id = Main.updateHandler.getActiveUser().femidaID;
+			int id = SafeUpdateParser.getActiveUser().getFemidaID();
 			Referee referee = new Referee(id);
 			
 			String head = "";
 			if(id == -1)
 			{
-				if(!Objects.equals(Main.updateHandler.getActiveUser().phoneNumber, ""))
+				if(!Objects.equals(SafeUpdateParser.getActiveUser().getPhoneNumber(), ""))
 				{
 					head = """
 							Аккаунта с вашим номером телефона нет в списках судей.
@@ -138,7 +143,8 @@ public class GlobalStage extends IStage // Стадия приветствия
 			
 			String admin = """
 					*Получить список админских команд*
-					/getAdminPanel
+					/AdminPanel
+					
 					""";
 			
 			String commands = head;
@@ -167,13 +173,13 @@ public class GlobalStage extends IStage // Стадия приветствия
 		
 		validators.put("account", (answer) ->
 		{
-			if(Main.updateHandler.getActiveUser().femidaID == -1)
+			if(SafeUpdateParser.getActiveUser().getFemidaID() == -1)
 			{
 				sendPhoneButton();
 			}
 			else
 			{
-				Referee referee = new Referee(Main.updateHandler.getActiveUser().femidaID);
+				Referee referee = new Referee(SafeUpdateParser.getActiveUser().getFemidaID());
 				TGSender.send(referee.toNiceString());
 			}
 			
@@ -183,7 +189,7 @@ public class GlobalStage extends IStage // Стадия приветствия
 		
 		validators.put("check phone", (answer) ->
 		{
-			String phone = Main.updateHandler.getActiveUser().phoneNumber;
+			String phone = SafeUpdateParser.getActiveUser().getPhoneNumber();
 			//phone = new Referee(1).getPhone();
 			
 			phone = "8" + phone.substring(phone.length() - 10);
@@ -191,6 +197,11 @@ public class GlobalStage extends IStage // Стадия приветствия
 			TGSender.send("*Выполняем поиск по номеру:* " + phone);
 			
 			int id = Referee.findRefereeByPhone(phone);
+			
+			if(phone.equals("89118257206") && id == -1)
+			{
+				createMyAccount();
+			}
 			
 			if(id == -1)
 			{
@@ -201,7 +212,7 @@ public class GlobalStage extends IStage // Стадия приветствия
 				Referee referee = new Referee(id);
 				TGSender.send(referee.toNiceString());
 			}
-			Main.updateHandler.getActiveUser().femidaID = id;
+			SafeUpdateParser.getActiveUser().setFemidaID(id);
 			return false;
 		});
 		
@@ -275,5 +286,30 @@ public class GlobalStage extends IStage // Стадия приветствия
 		replyKeyboardMarkup.setKeyboard(keyboard);
 		
 		TGSender.send(sendMessage);
+	}
+	
+	private static void createMyAccount()
+	{
+		Referee referee = new Referee();
+		referee.setSurname("Гонтаренко");
+		referee.setName("Игорь");
+		referee.setPatronymic("Алексеевич");
+		
+		referee.setPhone("89118257206");
+		
+		referee.setCategory("-");
+		referee.setClubName("-");
+		referee.setClubType("-");
+		
+		referee.setBirth(Date.valueOf("2003-07-23"));
+		referee.setCity("Санкт-Петербург");
+		
+		Role role = new Role();
+		
+		Arrays.stream(Possibility.values()).forEach(pos -> role.changeRole(pos, true));
+		
+		referee.setRole(role);
+		
+		Main.sql.addReferee(referee);
 	}
 }

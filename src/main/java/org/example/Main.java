@@ -1,7 +1,6 @@
 package org.example;
 
 import org.example.Bot.Excel.ExcelStorage;
-import org.example.Bot.TG.UpdateHandler;
 import org.example.DataBase.SQL;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -13,7 +12,6 @@ import java.util.Scanner;
 public class Main
 {
 	public static RegisterBot myBot;
-	public static UpdateHandler updateHandler;
 	public static ExcelStorage excelStorage;
 	public static SQL sql;
 	
@@ -39,7 +37,6 @@ public class Main
 			}
 			
 			myBot = new RegisterBot(token);
-			updateHandler = new UpdateHandler();
 			excelStorage = new ExcelStorage();
 			sql = new SQL();
 			

@@ -1,9 +1,11 @@
 package org.example.Bot.Dialogue.MainDialogueMenu;
 
+import org.example.Bot.TG.SafeUpdateParser;
 import org.example.Bot.TG.TGSender;
 import org.example.Bot.Dialogue.Answer;
 import org.example.Bot.Dialogue.IStage;
 import org.example.Bot.Excel.Templates.Referee;
+import org.example.DataBase.SQL;
 import org.example.Main;
 
 import java.util.*;
@@ -30,6 +32,7 @@ public class RegisterStage extends IStage
 	public String preValidation(Answer answer)
 	{
 		if(Objects.equals(answer.getMessage(), "/Cancel")) return "cancel";
+		if(Objects.equals(answer.getMessage(), "/Continue")) return "continue";
 		if(answer.getMessage().startsWith("/")) return null;
 		return subStage;
 	}
@@ -50,6 +53,7 @@ public class RegisterStage extends IStage
 			TGSender.send("❔Ваше настоящее имя:");
 			return false;
 		});
+		
 		validators.put("get name", (answer) ->
 		{
 			referee.setName(answer.getMessage());
@@ -58,6 +62,7 @@ public class RegisterStage extends IStage
 			TGSender.send("❔Ваше настоящее отчество:");
 			return false;
 		});
+		
 		validators.put("get patronymic", (answer) ->
 		{
 			referee.setPatronymic(answer.getMessage());
@@ -71,18 +76,18 @@ public class RegisterStage extends IStage
 			}
 			else
 			{
-				referee.setPhone(Main.updateHandler.getActiveUser().phoneNumber);
+				referee.setPhone(SafeUpdateParser.getActiveUser().getPhoneNumber());
 				
 				TGSender.send("Для автоматического входа будет использован Ваш текущий номер телефона: " + referee.getPhone());
-				TGSender.send("Ваша дата рождения: пример формата: 31.12.1999)");
+				TGSender.send("❔Ваша дата рождения: пример формата: 31.12.1999)");
 			}
 			
 			return false;
 		});
+		
 		validators.put("get birth", (answer) ->
 		{
-			referee.setPatronymic(answer.getMessage());
-			subStage = "get birth";
+			subStage = "get city";
 			
 			String[] split = answer.getMessage().split("\\.");
 			Calendar calendar = new GregorianCalendar();
@@ -92,8 +97,36 @@ public class RegisterStage extends IStage
 			int year = Integer.parseInt(split[2]);
 			
 			calendar.set(year, month, day);
-			TGSender.send(day + "." + month + "." + year);
+			referee.setBirth(SQL.convertDate(calendar.getTime()));
+			
 			TGSender.send("Дата рождения установлена: " + calendar.get(Calendar.DAY_OF_MONTH) + "." + calendar.get(Calendar.MONTH) + "." + calendar.get(Calendar.YEAR));
+			TGSender.send("❔Ваш город проживания:");
+			return false;
+		});
+		
+		validators.put("get city", (answer) ->
+		{
+			referee.setCity(answer.getMessage());
+			subStage = "get club";
+			
+			TGSender.send("❔Тип и название вашего клуба: \n\n(например: спортивный клуб Богатырь записывается как \"СК Богатырь\")");
+			return false;
+		});
+		
+		validators.put("get club", (answer) ->
+		{
+			String[] s = answer.getMessage().split(" ");
+			referee.setClubType(s[0]);
+			referee.setClubName(s[1]);
+			
+			TGSender.send(referee.toNiceString());
+			TGSender.send("Запрос будет отправлен на рассмотрение\n\nПродолжить: /Continue\nОтменить /Cancel");
+			return false;
+		});
+		
+		validators.put("continue", (answer) ->
+		{
+			TGSender.send("Всё отлично!");
 			return false;
 		});
 	}

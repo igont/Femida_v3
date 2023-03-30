@@ -29,12 +29,10 @@ public class RegisterBot extends TelegramLongPollingBot
 	{
 		SafeUpdateParser.update = update; // Просто сохранение апдейта
 		
-		Main.updateHandler.authoriseUser(update); // Регистрация пользователя
-		
 		// Если с пользоавтелем не ведется ниакакого диалога, то создается новый диалог
-		if(Main.updateHandler.getActiveUser().dialogue.stages == null) Main.updateHandler.getActiveUser().dialogue.start();
+		if(SafeUpdateParser.getActiveUser().getDialogue().stages == null) SafeUpdateParser.getActiveUser().getDialogue().start();
 		
 		// Обработка запроса с помощью диалога
-		Main.updateHandler.getActiveUser().dialogue.receiveUpdate(update);
+		SafeUpdateParser.getActiveUser().getDialogue().receiveUpdate(update);
 	}
 }

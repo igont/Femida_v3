@@ -24,7 +24,7 @@ public class Answer
 
 	public Answer(Update update)
 	{
-		currentStageName = Main.updateHandler.getActiveUser().dialogue.getCurrentStage();
+		currentStageName = SafeUpdateParser.getActiveUser().getDialogue().getCurrentStage();
 		this.update = update;
 		from = SafeUpdateParser.getName();
 		chatID = SafeUpdateParser.getChatID();

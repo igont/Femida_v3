@@ -1,7 +1,9 @@
 package org.example.DataBase;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.example.Bot.Excel.Templates.Competition;
 import org.example.Bot.Excel.Templates.Referee;
+import org.example.Bot.User;
 import org.example.DataBase.Interfaces.Column;
 import org.example.DataBase.Interfaces.DataBase;
 import org.example.DataBase.Interfaces.Table;
@@ -33,6 +35,7 @@ public class SQL
 		
 		createRefereeTable();
 		createCompetitionTable();
+		createUserTable();
 	}
 	
 	private static void initDriver()
@@ -85,22 +88,69 @@ public class SQL
 		for(Column column : columns)
 		{
 			column.setData(switch(column.name())
-					{
-						case "surname" -> referee.getSurname();
-						case "name" -> referee.getName();
-						case "patronymic" -> referee.getPatronymic();
-						case "city" -> referee.getCity();
-						case "phone" -> referee.getPhone();
-						case "category" -> referee.getCategory();
-						case "birth" -> referee.getBirth();
-						case "club_type" -> referee.getClubType();
-						case "club_name" -> referee.getClubName();
-						case "role" -> referee.getRole().toString();
-						default -> null;
-					});
+			{
+				case "surname" -> referee.getSurname();
+				case "name" -> referee.getName();
+				case "patronymic" -> referee.getPatronymic();
+				case "city" -> referee.getCity();
+				case "phone" -> referee.getPhone();
+				case "category" -> referee.getCategory();
+				case "birth" -> referee.getBirth();
+				case "club_type" -> referee.getClubType();
+				case "club_name" -> referee.getClubName();
+				case "role" -> referee.getRole().toString();
+				default -> null;
+			});
 		}
 		
 		mainDatabase.getTable("referee").addLine(columns);
+	}
+	
+	public void createUserTable()
+	{
+		List<Column> userColumns = new ArrayList<>();
+		
+		userColumns.add(new Column("name",TEXT));
+		userColumns.add(new Column("femida_id",INTEGER));
+		userColumns.add(new Column("phone", TEXT));
+		
+		Table table = new Table("users");
+		mainDatabase.addTable(table);
+		table.init(userColumns);
+	}
+	
+	public  void addUser(User user)
+	{
+		List<Column> columns = mainDatabase.getTable("users").getColumns();
+		for(Column column : columns)
+		{
+			column.setData(switch(column.name())
+			{
+				case "name" -> user.getName();
+				case "femida_id" -> user.getFemidaID();
+				case "phone" -> user.getPhoneNumber();
+				default -> null;
+			});
+		}
+		mainDatabase.getTable("users").addLine(columns);
+	}
+	
+	private void createCompetitionTable()
+	{
+		List<Column> competitionColumns = new ArrayList<>();
+		
+		competitionColumns.add(new Column("id", SMALLSERIAL));
+		competitionColumns.add(new Column("title", TEXT));
+		competitionColumns.add(new Column("place", TEXT));
+		competitionColumns.add(new Column("date", DATE));
+		competitionColumns.add(new Column("members", INTEGER_ARRAY));
+		competitionColumns.add(new Column("carpets", TEXT_ARRAY));
+		competitionColumns.add(new Column("grades", REAL_ARRAY));
+		competitionColumns.add(new Column("positions", TEXT_ARRAY));
+		
+		Table table = new Table("competitions");
+		mainDatabase.addTable(table);
+		table.init(competitionColumns);
 	}
 	
 	public void addCompetition(Competition competition)
@@ -124,24 +174,6 @@ public class SQL
 		
 		mainDatabase.getTable("competitions").addLine(columns);
 		reCountAllGrades();
-	}
-	
-	private void createCompetitionTable()
-	{
-		List<Column> competitionColumns = new ArrayList<>();
-		
-		competitionColumns.add(new Column("id", SMALLSERIAL));
-		competitionColumns.add(new Column("title", TEXT));
-		competitionColumns.add(new Column("place", TEXT));
-		competitionColumns.add(new Column("date", DATE));
-		competitionColumns.add(new Column("members", INTEGER_ARRAY));
-		competitionColumns.add(new Column("carpets", TEXT_ARRAY));
-		competitionColumns.add(new Column("grades", REAL_ARRAY));
-		competitionColumns.add(new Column("positions", TEXT_ARRAY));
-		
-		Table table = new Table("competitions");
-		mainDatabase.addTable(table);
-		table.init(competitionColumns);
 	}
 	
 	public String getGlobalRating()
@@ -353,5 +385,4 @@ public class SQL
 	{
 		return new Date(date.getTime());
 	}
-	
 }

@@ -24,17 +24,19 @@ public class Table
 	
 	private boolean tableDropped = true;
 	
-	public void drop()
+	public boolean drop()
 	{
 		try
 		{
 			SQL.execute("drop table " + name, currentBase.statement);
+			tableDropped = true;
+			return true;
 		}
 		catch(SQLException e)
 		{
-			throw new RuntimeException(e);
+			System.out.printf("❗ Table %s not exist\n", name);
+			return false;
 		}
-		tableDropped = true;
 	}
 	
 	public void setDatabase(DataBase dataBase)

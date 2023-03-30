@@ -1,6 +1,7 @@
 package org.example.Bot.Dialogue;
 
 import org.example.Bot.Dialogue.Interfaces.ValidationResult;
+import org.example.Bot.TG.SafeUpdateParser;
 import org.example.Bot.TG.TGSender;
 import org.example.Main;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -45,12 +46,14 @@ public abstract class IDialogue
 	
 	private ValidationResult validateStage(IStage stageFrom, Answer answer)
 	{
+		String name = SafeUpdateParser.getActiveUser().getName();
+		
 		String currentStageValidatorName = stageFrom.preValidation(answer);
-		System.out.printf("from:\t\t[%s]\nmessage:\t[%s]\nstage:\t\t[%s]\nquery: \t\t[%s]\n-------------------------\n", Main.updateHandler.getActiveUser().name,answer.getMessage(), stageFrom.stageName, currentStageValidatorName);
+		System.out.printf("from:\t\t[%s]\nmessage:\t[%s]\nstage:\t\t[%s]\nquery: \t\t[%s]\n-------------------------\n", name,answer.getMessage(), stageFrom.stageName, currentStageValidatorName);
 		
 		if(currentStageValidatorName == null)
 		{
-			System.out.println(Main.updateHandler.getActiveUser().name + ": " + stageFrom.stageName + " --> ??? --> global stage");
+			System.out.println(name + ": " + stageFrom.stageName + " --> ??? --> global stage");
 			System.out.println("-------------------------");
 			
 			return ValidationResult.NOT_FOUND;
@@ -58,13 +61,13 @@ public abstract class IDialogue
 		
 		if(stageFrom.validators.get(currentStageValidatorName).validate(answer)) // Валидируемся на следующую
 		{
-			System.out.println(Main.updateHandler.getActiveUser().name + ": " + stageFrom.stageName + " --> " + currentStageValidatorName);
+			System.out.println(name + ": " + stageFrom.stageName + " --> " + currentStageValidatorName);
 			System.out.println("-------------------------");
 			changeStage(currentStageValidatorName);
 		}
 		else
 		{
-			System.out.println(Main.updateHandler.getActiveUser().name + ": " + stageFrom.stageName + " --> " + currentStageValidatorName + " [false] --> global stage");
+			System.out.println(name + ": " + stageFrom.stageName + " --> " + currentStageValidatorName + " [false] --> global stage");
 			System.out.println("-------------------------");
 		}
 		return ValidationResult.NEXT_STAGE;

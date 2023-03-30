@@ -16,6 +16,7 @@ public class MainDialogue extends IDialogue
 		stages.put("new referee",new NewRefereeStage("new referee"));
 		stages.put("new competition",new NewCompetitionStage("new competition"));
 		stages.put("register",new RegisterStage("register"));
+		stages.put("admin panel",new AdminPanelStage("admin panel"));
 
 
 		changeStage("global stage");
